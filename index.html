@@ -14,7 +14,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -26,14 +25,13 @@
    Firebase Console → Project settings → Your apps → Web app
    (Left empty, the app still works on this device only.)
    ════════════════════════════════════════════════════════ */
-const firebaseConfig = {
-  apiKey: "AIzaSyD-lmCO9IA7yGiPCB0AFQjq-HrX7I4zPwY",
-  authDomain: "baby-tracker-9efad.firebaseapp.com",
-  projectId: "baby-tracker-9efad",
-  storageBucket: "baby-tracker-9efad.firebasestorage.app",
-  messagingSenderId: "668829705164",
-  appId: "1:668829705164:web:a3ba23c892af4416b0f369",
-  measurementId: "G-V5EJEMCP7L"
+const FIREBASE_CONFIG = {
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: ""
 };
 </script>
 
@@ -67,113 +65,156 @@ const firebaseConfig = {
 <body>
 <div id="root"></div>
 
-<script type="text/babel" data-presets="react">
+<script>
+const React = window.React;
+const ReactDOM = window.ReactDOM;
 const { useState, useEffect, useMemo, useRef } = React;
-
-/* ─────────── Firebase bootstrap ─────────── */
 const FB_READY = !!(FIREBASE_CONFIG && FIREBASE_CONFIG.apiKey);
 let db = null;
 if (FB_READY) {
   firebase.initializeApp(FIREBASE_CONFIG);
   db = firebase.firestore();
-  db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+  db.enablePersistence({ synchronizeTabs: true }).catch(() => {
+  });
 }
-
-/* ─────────── themes ─────────── */
 const THEMES = {
   porcelain: {
-    name: "Porcelain", tagline: "Ivory, ink & gold",
-    bg: "#FAF8F3", card: "#FFFFFF",
-    ink: "#20243A", inkSoft: "#6E7188", faint: "#ABADC0",
-    track: "#E9E5DA", chipBg: "#F2EFE7", inputBg: "#F7F5EF",
-    navBg: "rgba(250,248,243,0.94)", border: "#E7E3D8", hairline: "#EDEAE0",
-    gold: "#B89B5E", goldSoft: "#F4EDDD",
-    display: "'Cormorant Garamond', serif", body: "'Jost', sans-serif",
-    feed: "#A8784F", pump: "#A86F84", sleep: "#5C6394",
-    diaper: "#6F9683", med: "#A18545", growth: "#5E7FA3", health: "#A56A6A",
-    heroMoonA: "#EFE9DA", heroMoonB: "#D8CFB8", heroLine: "#C9B98E", heroStar: "#B89B5E",
+    name: "Porcelain",
+    tagline: "Ivory, ink & gold",
+    bg: "#FAF8F3",
+    card: "#FFFFFF",
+    ink: "#20243A",
+    inkSoft: "#6E7188",
+    faint: "#ABADC0",
+    track: "#E9E5DA",
+    chipBg: "#F2EFE7",
+    inputBg: "#F7F5EF",
+    navBg: "rgba(250,248,243,0.94)",
+    border: "#E7E3D8",
+    hairline: "#EDEAE0",
+    gold: "#B89B5E",
+    goldSoft: "#F4EDDD",
+    display: "'Cormorant Garamond', serif",
+    body: "'Jost', sans-serif",
+    feed: "#A8784F",
+    pump: "#A86F84",
+    sleep: "#5C6394",
+    diaper: "#6F9683",
+    med: "#A18545",
+    growth: "#5E7FA3",
+    health: "#A56A6A",
+    heroMoonA: "#EFE9DA",
+    heroMoonB: "#D8CFB8",
+    heroLine: "#C9B98E",
+    heroStar: "#B89B5E"
   },
   midnight: {
-    name: "Midnight", tagline: "Deep navy & champagne",
-    bg: "#0F1220", card: "#171B2E",
-    ink: "#EFEBDF", inkSoft: "#9C99B6", faint: "#5C5980",
-    track: "#272B45", chipBg: "#21253E", inputBg: "#1D2138",
-    navBg: "rgba(15,18,32,0.94)", border: "#272B45", hairline: "#21253E",
-    gold: "#CBB287", goldSoft: "#262338",
-    display: "'Cormorant Garamond', serif", body: "'Jost', sans-serif",
-    feed: "#CBA478", pump: "#C08DA2", sleep: "#8E97D8",
-    diaper: "#8FB8A2", med: "#C9AC6A", growth: "#8FA8C8", health: "#C08585",
-    heroMoonA: "#2A2F4D", heroMoonB: "#3C4268", heroLine: "#4A4670", heroStar: "#CBB287",
-  },
+    name: "Midnight",
+    tagline: "Deep navy & champagne",
+    bg: "#0F1220",
+    card: "#171B2E",
+    ink: "#EFEBDF",
+    inkSoft: "#9C99B6",
+    faint: "#5C5980",
+    track: "#272B45",
+    chipBg: "#21253E",
+    inputBg: "#1D2138",
+    navBg: "rgba(15,18,32,0.94)",
+    border: "#272B45",
+    hairline: "#21253E",
+    gold: "#CBB287",
+    goldSoft: "#262338",
+    display: "'Cormorant Garamond', serif",
+    body: "'Jost', sans-serif",
+    feed: "#CBA478",
+    pump: "#C08DA2",
+    sleep: "#8E97D8",
+    diaper: "#8FB8A2",
+    med: "#C9AC6A",
+    growth: "#8FA8C8",
+    health: "#C08585",
+    heroMoonA: "#2A2F4D",
+    heroMoonB: "#3C4268",
+    heroLine: "#4A4670",
+    heroStar: "#CBB287"
+  }
 };
-
-/* WHO reference (boys, 0–24 mo) — approximate, visual guidance only */
 const WHO_WEIGHT = {
-  months: [0,1,2,3,4,6,9,12,18,24],
-  p3:[2.5,3.4,4.4,5.1,5.6,6.4,7.2,7.8,8.8,9.7],
-  p15:[2.9,3.9,4.9,5.6,6.2,7.1,7.9,8.6,9.7,10.7],
-  p50:[3.3,4.5,5.6,6.4,7.0,7.9,8.9,9.6,10.9,12.2],
-  p85:[3.9,5.1,6.3,7.2,7.9,8.9,10.0,10.8,12.3,13.7],
-  p97:[4.3,5.7,7.0,7.9,8.6,9.7,10.9,11.8,13.5,15.1],
+  months: [0, 1, 2, 3, 4, 6, 9, 12, 18, 24],
+  p3: [2.5, 3.4, 4.4, 5.1, 5.6, 6.4, 7.2, 7.8, 8.8, 9.7],
+  p15: [2.9, 3.9, 4.9, 5.6, 6.2, 7.1, 7.9, 8.6, 9.7, 10.7],
+  p50: [3.3, 4.5, 5.6, 6.4, 7, 7.9, 8.9, 9.6, 10.9, 12.2],
+  p85: [3.9, 5.1, 6.3, 7.2, 7.9, 8.9, 10, 10.8, 12.3, 13.7],
+  p97: [4.3, 5.7, 7, 7.9, 8.6, 9.7, 10.9, 11.8, 13.5, 15.1]
 };
 const WHO_HEIGHT = {
-  months: [0,1,2,3,4,6,9,12,18,24],
-  p3:[46.3,51.1,54.7,57.6,60.0,63.6,67.7,71.0,76.9,81.7],
-  p15:[47.9,52.7,56.4,59.3,61.7,65.4,69.7,73.0,79.2,84.2],
-  p50:[49.9,54.7,58.4,61.4,63.9,67.6,72.0,75.7,82.3,87.8],
-  p85:[51.8,56.7,60.5,63.5,66.0,69.8,74.2,78.1,85.0,90.9],
-  p97:[53.4,58.4,62.2,65.3,67.8,71.6,76.2,80.2,87.3,93.6],
+  months: [0, 1, 2, 3, 4, 6, 9, 12, 18, 24],
+  p3: [46.3, 51.1, 54.7, 57.6, 60, 63.6, 67.7, 71, 76.9, 81.7],
+  p15: [47.9, 52.7, 56.4, 59.3, 61.7, 65.4, 69.7, 73, 79.2, 84.2],
+  p50: [49.9, 54.7, 58.4, 61.4, 63.9, 67.6, 72, 75.7, 82.3, 87.8],
+  p85: [51.8, 56.7, 60.5, 63.5, 66, 69.8, 74.2, 78.1, 85, 90.9],
+  p97: [53.4, 58.4, 62.2, 65.3, 67.8, 71.6, 76.2, 80.2, 87.3, 93.6]
 };
-
 const MILESTONE_LIST = [
-  { key:"firstSmile", label:"First smile" },
-  { key:"firstLaugh", label:"First laugh" },
-  { key:"holdsHead", label:"Holds head up" },
-  { key:"rollsOver", label:"Rolls over" },
-  { key:"firstTooth", label:"First tooth" },
-  { key:"sitsUp", label:"Sits up" },
-  { key:"firstSolid", label:"First solid food" },
-  { key:"crawls", label:"Crawls" },
-  { key:"firstWord", label:"First word" },
-  { key:"standsUp", label:"Stands up" },
-  { key:"firstSteps", label:"First steps" },
-  { key:"sleepsThrough", label:"Sleeps through the night" },
+  { key: "firstSmile", label: "First smile" },
+  { key: "firstLaugh", label: "First laugh" },
+  { key: "holdsHead", label: "Holds head up" },
+  { key: "rollsOver", label: "Rolls over" },
+  { key: "firstTooth", label: "First tooth" },
+  { key: "sitsUp", label: "Sits up" },
+  { key: "firstSolid", label: "First solid food" },
+  { key: "crawls", label: "Crawls" },
+  { key: "firstWord", label: "First word" },
+  { key: "standsUp", label: "Stands up" },
+  { key: "firstSteps", label: "First steps" },
+  { key: "sleepsThrough", label: "Sleeps through the night" }
 ];
-
 const LOCAL_KEY = "little-astronaut-data";
 const CODE_KEY = "little-astronaut-family-code";
 const uid = () => Math.random().toString(36).slice(2, 9);
-const THEME_MIGRATE = { starlight:"porcelain", observatory:"midnight" };
-
+const THEME_MIGRATE = { starlight: "porcelain", observatory: "midnight" };
 const emptyData = {
-  babyName:"", birthDate:"", theme:"porcelain",
-  feeds:[], pumps:[], sleeps:[], meds:[], diapers:[],
-  temps:[], tummy:[], growth:[], milestones:{},
+  babyName: "",
+  birthDate: "",
+  theme: "porcelain",
+  feeds: [],
+  pumps: [],
+  sleeps: [],
+  meds: [],
+  diapers: [],
+  temps: [],
+  tummy: [],
+  growth: [],
+  milestones: {}
 };
-
-/* ─────────── helpers ─────────── */
-const fmtTime = iso => new Date(iso).toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});
-const fmtDate = iso => new Date(iso).toLocaleDateString([], {month:"short", day:"numeric"});
-const isToday = iso => { const d=new Date(iso), n=new Date(); return d.getFullYear()===n.getFullYear() && d.getMonth()===n.getMonth() && d.getDate()===n.getDate(); };
-const minutesAgoToISO = m => new Date(Date.now() - m*60000).toISOString();
-const hrsMin = mins => { const h=Math.floor(mins/60), m=Math.round(mins%60); return h ? `${h}h${m ? " "+m+"m" : ""}` : `${m}m`; };
-const ageString = birthDate => {
+const fmtTime = (iso) => new Date(iso).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+const fmtDate = (iso) => new Date(iso).toLocaleDateString([], { month: "short", day: "numeric" });
+const isToday = (iso) => {
+  const d = new Date(iso), n = /* @__PURE__ */ new Date();
+  return d.getFullYear() === n.getFullYear() && d.getMonth() === n.getMonth() && d.getDate() === n.getDate();
+};
+const minutesAgoToISO = (m) => new Date(Date.now() - m * 6e4).toISOString();
+const hrsMin = (mins) => {
+  const h = Math.floor(mins / 60), m = Math.round(mins % 60);
+  return h ? `${h}h${m ? " " + m + "m" : ""}` : `${m}m`;
+};
+const ageString = (birthDate) => {
   if (!birthDate) return null;
-  const days = Math.floor((Date.now() - new Date(birthDate+"T00:00:00"))/86400000);
+  const days = Math.floor((Date.now() - /* @__PURE__ */ new Date(birthDate + "T00:00:00")) / 864e5);
   if (days < 0) return "Arriving soon";
-  if (days < 14) return `${days} day${days===1?"":"s"} old`;
-  if (days < 70) return `${Math.floor(days/7)} weeks, ${days%7} days old`;
-  const months = Math.floor(days/30.44);
-  return `${months} month${months===1?"":"s"} old`;
+  if (days < 14) return `${days} day${days === 1 ? "" : "s"} old`;
+  if (days < 70) return `${Math.floor(days / 7)} weeks, ${days % 7} days old`;
+  const months = Math.floor(days / 30.44);
+  return `${months} month${months === 1 ? "" : "s"} old`;
 };
-const ageInMonths = (birthDate, atISO) => (new Date(atISO) - new Date(birthDate+"T00:00:00"))/(86400000*30.44);
+const ageInMonths = (birthDate, atISO) => (new Date(atISO) - /* @__PURE__ */ new Date(birthDate + "T00:00:00")) / (864e5 * 30.44);
 const interp = (months, vals, m) => {
   if (m <= months[0]) return vals[0];
-  if (m >= months[months.length-1]) return vals[vals.length-1];
-  for (let i=0;i<months.length-1;i++){
-    if (m>=months[i] && m<=months[i+1]) {
-      const t=(m-months[i])/(months[i+1]-months[i]);
-      return vals[i]+t*(vals[i+1]-vals[i]);
+  if (m >= months[months.length - 1]) return vals[vals.length - 1];
+  for (let i = 0; i < months.length - 1; i++) {
+    if (m >= months[i] && m <= months[i + 1]) {
+      const t = (m - months[i]) / (months[i + 1] - months[i]);
+      return vals[i] + t * (vals[i + 1] - vals[i]);
     }
   }
   return vals[0];
@@ -182,248 +223,193 @@ const loadLocal = () => {
   try {
     const s = localStorage.getItem(LOCAL_KEY);
     if (!s) return emptyData;
-    const p = {...emptyData, ...JSON.parse(s)};
+    const p = { ...emptyData, ...JSON.parse(s) };
     p.theme = THEME_MIGRATE[p.theme] || p.theme;
     if (!THEMES[p.theme]) p.theme = "porcelain";
     return p;
-  } catch { return emptyData; }
+  } catch (e) {
+    return emptyData;
+  }
 };
-const saveLocal = d => { try { localStorage.setItem(LOCAL_KEY, JSON.stringify(d)); } catch {} };
-
-/* ════════════ BESPOKE SVG ASSET SUITE ════════════ */
-
-/* Icon shell — 1.6px stroke, consistent optical weight */
-function Ic({ children, size=20, color="currentColor", fill="none", style }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill={fill} stroke={color}
-      strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={style} aria-hidden="true">
-      {children}
-    </svg>
+const saveLocal = (d) => {
+  try {
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(d));
+  } catch (e) {
+  }
+};
+function Ic({ children, size = 20, color = "currentColor", fill = "none", style }) {
+  return /* @__PURE__ */ React.createElement(
+    "svg",
+    {
+      width: size,
+      height: size,
+      viewBox: "0 0 24 24",
+      fill,
+      stroke: color,
+      strokeWidth: "1.6",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      style,
+      "aria-hidden": "true"
+    },
+    children
   );
 }
-const IBottle = p => <Ic {...p}><path d="M10 3h4"/><path d="M10.5 3v2.2c-.9.3-1.5 1-1.5 2V7h6v.2c0-1-.6-1.7-1.5-2V3"/><rect x="8.5" y="7" width="7" height="14" rx="2.4"/><path d="M8.5 11.5h7M8.5 16h7"/></Ic>;
-const IDrop = p => <Ic {...p}><path d="M12 3.5c3.2 4.2 5.5 7.2 5.5 10.2a5.5 5.5 0 0 1-11 0c0-3 2.3-6 5.5-10.2z"/><path d="M9.8 14.2a2.6 2.6 0 0 0 2 2.5"/></Ic>;
-const IPump = p => <Ic {...p}><circle cx="12" cy="8" r="3.4"/><path d="M12 11.4v3.1"/><path d="M12 14.5c2.4 1.4 3.7 3.2 3.7 5h-7.4c0-1.8 1.3-3.6 3.7-5z"/><path d="M7.2 6.2 5.4 4.9M16.8 6.2l1.8-1.3M12 2.6V1.4" strokeWidth="1.3"/></Ic>;
-const IMoon = p => <Ic {...p}><path d="M19 13.2A7.5 7.5 0 1 1 10.8 5 6 6 0 0 0 19 13.2z"/><path d="M17 4.5l.5 1.4 1.4.5-1.4.5-.5 1.4-.5-1.4-1.4-.5 1.4-.5z" strokeWidth="1.2"/></Ic>;
-const IDiaper = p => <Ic {...p}><path d="M4 7h16v3a8 8 0 0 1-5.5 7.6L13 18.5c0-2.5-1-3.5-1-3.5s-1 1-1 3.5l-1.5-.9A8 8 0 0 1 4 10z"/><path d="M4 9.5h3M17 9.5h3" strokeWidth="1.3"/></Ic>;
-const IPill = p => <Ic {...p}><rect x="3.2" y="9.2" width="17.6" height="6.4" rx="3.2" transform="rotate(-35 12 12)"/><path d="M9.4 8.3l4.4 6.3" strokeWidth="1.4"/></Ic>;
-const IThermo = p => <Ic {...p}><path d="M10.5 4a2 2 0 0 1 4 0v9.2a4.2 4.2 0 1 1-4 0z"/><circle cx="12.5" cy="17" r="1.6" fill="currentColor" stroke="none"/><path d="M12.5 14.8V8" strokeWidth="1.4"/></Ic>;
-const ISun = p => <Ic {...p}><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.4 5.4l1.4 1.4M17.2 17.2l1.4 1.4M18.6 5.4l-1.4 1.4M6.8 17.2l-1.4 1.4" strokeWidth="1.4"/></Ic>;
-const IRuler = p => <Ic {...p}><rect x="2.8" y="9" width="18.4" height="6" rx="1.4"/><path d="M7 9v2.6M11 9v3.6M15 9v2.6M19 9v3.6" strokeWidth="1.3"/></Ic>;
-const IScale = p => <Ic {...p}><rect x="4" y="4" width="16" height="16" rx="3.4"/><path d="M8.2 9.4a4.6 4.6 0 0 1 7.6 0l-2.3 1.8a2 2 0 0 0-3 0z"/></Ic>;
-const ISprout = p => <Ic {...p}><path d="M12 21v-8"/><path d="M12 13c0-3.6-2.6-6-6.4-6 0 3.8 2.6 6 6.4 6z"/><path d="M12 10.6c0-3 2.2-5.1 5.6-5.1 0 3.2-2.2 5.1-5.6 5.1z"/></Ic>;
-const IStar = p => <Ic {...p}><path d="M12 3.6l1.9 5 5.1.3-4 3.3 1.3 5-4.3-2.8-4.3 2.8 1.3-5-4-3.3 5.1-.3z"/></Ic>;
-const IStarFill = p => <Ic {...p} fill="currentColor"><path d="M12 3.6l1.9 5 5.1.3-4 3.3 1.3 5-4.3-2.8-4.3 2.8 1.3-5-4-3.3 5.1-.3z"/></Ic>;
-const IRocket = p => <Ic {...p}><path d="M12 3c2.8 1.7 4.4 4.8 4.4 8.6l-1.6 4H9.2l-1.6-4C7.6 7.8 9.2 4.7 12 3z"/><circle cx="12" cy="9.6" r="1.7"/><path d="M9.2 15.6 7 19.2M14.8 15.6 17 19.2M12 16v4.6" strokeWidth="1.4"/></Ic>;
-const IOrbit = p => <Ic {...p}><circle cx="12" cy="12" r="4.6"/><ellipse cx="12" cy="12" rx="9.6" ry="3.6" transform="rotate(-22 12 12)"/><circle cx="19.6" cy="7.6" r="1.1" fill="currentColor" stroke="none"/></Ic>;
-const IChart = p => <Ic {...p}><path d="M4 20V4"/><path d="M4 20h16"/><path d="M8.5 16v-5M13 16V7.5M17.5 16v-7" strokeWidth="1.8"/></Ic>;
-const IGear = p => <Ic {...p}><circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8" strokeWidth="1.4"/></Ic>;
-const ISatellite = p => <Ic {...p}><rect x="9.4" y="9.4" width="5.2" height="5.2" rx="1" transform="rotate(45 12 12)"/><path d="M3.4 9.2l4.2-4.2 3 3-4.2 4.2zM13.4 16l4.2-4.2 3 3-4.2 4.2z"/><path d="M12 15.6c-1.4 1.4-1.4 3.4-1.4 4.6" strokeWidth="1.3"/></Ic>;
-const INotebook = p => <Ic {...p}><rect x="5.5" y="3.5" width="13" height="17" rx="2"/><path d="M9 3.5v17" strokeWidth="1.3"/><path d="M12 8.5h3.5M12 12h3.5M12 15.5h3.5" strokeWidth="1.3"/></Ic>;
-const IClose = p => <Ic {...p}><path d="M7 7l10 10M17 7L7 17" strokeWidth="1.8"/></Ic>;
-
-/* 4-point star path used in hero */
-const star4 = (cx, cy, r) => `M${cx} ${cy-r} Q${cx+r*0.18} ${cy-r*0.18} ${cx+r} ${cy} Q${cx+r*0.18} ${cy+r*0.18} ${cx} ${cy+r} Q${cx-r*0.18} ${cy+r*0.18} ${cx-r} ${cy} Q${cx-r*0.18} ${cy-r*0.18} ${cx} ${cy-r}Z`;
-
-/* Hero celestial illustration — engraved moon, orbit rings, fine stars */
+const IBottle = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("path", { d: "M10 3h4" }), /* @__PURE__ */ React.createElement("path", { d: "M10.5 3v2.2c-.9.3-1.5 1-1.5 2V7h6v.2c0-1-.6-1.7-1.5-2V3" }), /* @__PURE__ */ React.createElement("rect", { x: "8.5", y: "7", width: "7", height: "14", rx: "2.4" }), /* @__PURE__ */ React.createElement("path", { d: "M8.5 11.5h7M8.5 16h7" }));
+const IDrop = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("path", { d: "M12 3.5c3.2 4.2 5.5 7.2 5.5 10.2a5.5 5.5 0 0 1-11 0c0-3 2.3-6 5.5-10.2z" }), /* @__PURE__ */ React.createElement("path", { d: "M9.8 14.2a2.6 2.6 0 0 0 2 2.5" }));
+const IPump = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("circle", { cx: "12", cy: "8", r: "3.4" }), /* @__PURE__ */ React.createElement("path", { d: "M12 11.4v3.1" }), /* @__PURE__ */ React.createElement("path", { d: "M12 14.5c2.4 1.4 3.7 3.2 3.7 5h-7.4c0-1.8 1.3-3.6 3.7-5z" }), /* @__PURE__ */ React.createElement("path", { d: "M7.2 6.2 5.4 4.9M16.8 6.2l1.8-1.3M12 2.6V1.4", strokeWidth: "1.3" }));
+const IMoon = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("path", { d: "M19 13.2A7.5 7.5 0 1 1 10.8 5 6 6 0 0 0 19 13.2z" }), /* @__PURE__ */ React.createElement("path", { d: "M17 4.5l.5 1.4 1.4.5-1.4.5-.5 1.4-.5-1.4-1.4-.5 1.4-.5z", strokeWidth: "1.2" }));
+const IDiaper = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("path", { d: "M4 7h16v3a8 8 0 0 1-5.5 7.6L13 18.5c0-2.5-1-3.5-1-3.5s-1 1-1 3.5l-1.5-.9A8 8 0 0 1 4 10z" }), /* @__PURE__ */ React.createElement("path", { d: "M4 9.5h3M17 9.5h3", strokeWidth: "1.3" }));
+const IPill = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("rect", { x: "3.2", y: "9.2", width: "17.6", height: "6.4", rx: "3.2", transform: "rotate(-35 12 12)" }), /* @__PURE__ */ React.createElement("path", { d: "M9.4 8.3l4.4 6.3", strokeWidth: "1.4" }));
+const IThermo = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("path", { d: "M10.5 4a2 2 0 0 1 4 0v9.2a4.2 4.2 0 1 1-4 0z" }), /* @__PURE__ */ React.createElement("circle", { cx: "12.5", cy: "17", r: "1.6", fill: "currentColor", stroke: "none" }), /* @__PURE__ */ React.createElement("path", { d: "M12.5 14.8V8", strokeWidth: "1.4" }));
+const ISun = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("circle", { cx: "12", cy: "12", r: "4" }), /* @__PURE__ */ React.createElement("path", { d: "M12 3v2M12 19v2M3 12h2M19 12h2M5.4 5.4l1.4 1.4M17.2 17.2l1.4 1.4M18.6 5.4l-1.4 1.4M6.8 17.2l-1.4 1.4", strokeWidth: "1.4" }));
+const IRuler = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("rect", { x: "2.8", y: "9", width: "18.4", height: "6", rx: "1.4" }), /* @__PURE__ */ React.createElement("path", { d: "M7 9v2.6M11 9v3.6M15 9v2.6M19 9v3.6", strokeWidth: "1.3" }));
+const IScale = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("rect", { x: "4", y: "4", width: "16", height: "16", rx: "3.4" }), /* @__PURE__ */ React.createElement("path", { d: "M8.2 9.4a4.6 4.6 0 0 1 7.6 0l-2.3 1.8a2 2 0 0 0-3 0z" }));
+const ISprout = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("path", { d: "M12 21v-8" }), /* @__PURE__ */ React.createElement("path", { d: "M12 13c0-3.6-2.6-6-6.4-6 0 3.8 2.6 6 6.4 6z" }), /* @__PURE__ */ React.createElement("path", { d: "M12 10.6c0-3 2.2-5.1 5.6-5.1 0 3.2-2.2 5.1-5.6 5.1z" }));
+const IStar = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("path", { d: "M12 3.6l1.9 5 5.1.3-4 3.3 1.3 5-4.3-2.8-4.3 2.8 1.3-5-4-3.3 5.1-.3z" }));
+const IStarFill = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p, fill: "currentColor" }, /* @__PURE__ */ React.createElement("path", { d: "M12 3.6l1.9 5 5.1.3-4 3.3 1.3 5-4.3-2.8-4.3 2.8 1.3-5-4-3.3 5.1-.3z" }));
+const IRocket = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("path", { d: "M12 3c2.8 1.7 4.4 4.8 4.4 8.6l-1.6 4H9.2l-1.6-4C7.6 7.8 9.2 4.7 12 3z" }), /* @__PURE__ */ React.createElement("circle", { cx: "12", cy: "9.6", r: "1.7" }), /* @__PURE__ */ React.createElement("path", { d: "M9.2 15.6 7 19.2M14.8 15.6 17 19.2M12 16v4.6", strokeWidth: "1.4" }));
+const IOrbit = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("circle", { cx: "12", cy: "12", r: "4.6" }), /* @__PURE__ */ React.createElement("ellipse", { cx: "12", cy: "12", rx: "9.6", ry: "3.6", transform: "rotate(-22 12 12)" }), /* @__PURE__ */ React.createElement("circle", { cx: "19.6", cy: "7.6", r: "1.1", fill: "currentColor", stroke: "none" }));
+const IChart = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("path", { d: "M4 20V4" }), /* @__PURE__ */ React.createElement("path", { d: "M4 20h16" }), /* @__PURE__ */ React.createElement("path", { d: "M8.5 16v-5M13 16V7.5M17.5 16v-7", strokeWidth: "1.8" }));
+const IGear = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("circle", { cx: "12", cy: "12", r: "3" }), /* @__PURE__ */ React.createElement("path", { d: "M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8", strokeWidth: "1.4" }));
+const ISatellite = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("rect", { x: "9.4", y: "9.4", width: "5.2", height: "5.2", rx: "1", transform: "rotate(45 12 12)" }), /* @__PURE__ */ React.createElement("path", { d: "M3.4 9.2l4.2-4.2 3 3-4.2 4.2zM13.4 16l4.2-4.2 3 3-4.2 4.2z" }), /* @__PURE__ */ React.createElement("path", { d: "M12 15.6c-1.4 1.4-1.4 3.4-1.4 4.6", strokeWidth: "1.3" }));
+const INotebook = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("rect", { x: "5.5", y: "3.5", width: "13", height: "17", rx: "2" }), /* @__PURE__ */ React.createElement("path", { d: "M9 3.5v17", strokeWidth: "1.3" }), /* @__PURE__ */ React.createElement("path", { d: "M12 8.5h3.5M12 12h3.5M12 15.5h3.5", strokeWidth: "1.3" }));
+const IClose = (p) => /* @__PURE__ */ React.createElement(Ic, { ...p }, /* @__PURE__ */ React.createElement("path", { d: "M7 7l10 10M17 7L7 17", strokeWidth: "1.8" }));
+const star4 = (cx, cy, r) => `M${cx} ${cy - r} Q${cx + r * 0.18} ${cy - r * 0.18} ${cx + r} ${cy} Q${cx + r * 0.18} ${cy + r * 0.18} ${cx} ${cy + r} Q${cx - r * 0.18} ${cy + r * 0.18} ${cx - r} ${cy} Q${cx - r * 0.18} ${cy - r * 0.18} ${cx} ${cy - r}Z`;
 function HeroCelestial({ T }) {
-  return (
-    <svg viewBox="0 0 360 132" style={{width:"100%", display:"block"}} aria-hidden="true">
-      <defs>
-        <radialGradient id="lx-moon" cx="38%" cy="32%" r="75%">
-          <stop offset="0%" stopColor={T.heroMoonA}/>
-          <stop offset="100%" stopColor={T.heroMoonB}/>
-        </radialGradient>
-      </defs>
-      {/* orbit rings */}
-      <ellipse cx="180" cy="66" rx="150" ry="44" fill="none" stroke={T.heroLine} strokeWidth="0.8" opacity="0.55" transform="rotate(-8 180 66)"/>
-      <ellipse cx="180" cy="66" rx="112" ry="33" fill="none" stroke={T.heroLine} strokeWidth="0.8" opacity="0.4" transform="rotate(-8 180 66)" strokeDasharray="1.5 4"/>
-      {/* moon */}
-      <g className="lx-drift">
-        <circle cx="180" cy="62" r="34" fill="url(#lx-moon)"/>
-        <circle cx="180" cy="62" r="34" fill="none" stroke={T.heroLine} strokeWidth="0.9" opacity="0.7"/>
-        <circle cx="168" cy="54" r="5.5" fill="none" stroke={T.heroLine} strokeWidth="0.7" opacity="0.55"/>
-        <circle cx="192" cy="70" r="3.6" fill="none" stroke={T.heroLine} strokeWidth="0.7" opacity="0.45"/>
-        <circle cx="184" cy="48" r="2.2" fill="none" stroke={T.heroLine} strokeWidth="0.7" opacity="0.4"/>
-        <circle cx="170" cy="72" r="2.6" fill="none" stroke={T.heroLine} strokeWidth="0.7" opacity="0.4"/>
-      </g>
-      {/* satellite on outer ring */}
-      <circle cx="318" cy="48" r="3" fill={T.heroStar}/>
-      <circle cx="318" cy="48" r="6.2" fill="none" stroke={T.heroStar} strokeWidth="0.7" opacity="0.6"/>
-      {/* small planet on inner ring */}
-      <circle cx="74" cy="92" r="4.6" fill="none" stroke={T.heroLine} strokeWidth="1"/>
-      <ellipse cx="74" cy="92" rx="8.4" ry="2.6" fill="none" stroke={T.heroLine} strokeWidth="0.7" transform="rotate(-16 74 92)"/>
-      {/* fine stars */}
-      <path d={star4(40,34,6)} fill={T.heroStar} opacity="0.85"/>
-      <path d={star4(308,104,5)} fill={T.heroStar} opacity="0.7"/>
-      <path d={star4(120,18,3.6)} fill={T.heroStar} opacity="0.55"/>
-      <path d={star4(258,22,4.4)} fill={T.heroStar} opacity="0.65"/>
-      <path d={star4(28,98,3.2)} fill={T.heroStar} opacity="0.5"/>
-      <circle cx="96" cy="48" r="1.1" fill={T.heroStar} opacity="0.6"/>
-      <circle cx="276" cy="78" r="1.1" fill={T.heroStar} opacity="0.6"/>
-      <circle cx="226" cy="14" r="1" fill={T.heroStar} opacity="0.5"/>
-      <circle cx="140" cy="110" r="1" fill={T.heroStar} opacity="0.5"/>
-    </svg>
-  );
+  return /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 360 132", style: { width: "100%", display: "block" }, "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("defs", null, /* @__PURE__ */ React.createElement("radialGradient", { id: "lx-moon", cx: "38%", cy: "32%", r: "75%" }, /* @__PURE__ */ React.createElement("stop", { offset: "0%", stopColor: T.heroMoonA }), /* @__PURE__ */ React.createElement("stop", { offset: "100%", stopColor: T.heroMoonB }))), /* @__PURE__ */ React.createElement("ellipse", { cx: "180", cy: "66", rx: "150", ry: "44", fill: "none", stroke: T.heroLine, strokeWidth: "0.8", opacity: "0.55", transform: "rotate(-8 180 66)" }), /* @__PURE__ */ React.createElement("ellipse", { cx: "180", cy: "66", rx: "112", ry: "33", fill: "none", stroke: T.heroLine, strokeWidth: "0.8", opacity: "0.4", transform: "rotate(-8 180 66)", strokeDasharray: "1.5 4" }), /* @__PURE__ */ React.createElement("g", { className: "lx-drift" }, /* @__PURE__ */ React.createElement("circle", { cx: "180", cy: "62", r: "34", fill: "url(#lx-moon)" }), /* @__PURE__ */ React.createElement("circle", { cx: "180", cy: "62", r: "34", fill: "none", stroke: T.heroLine, strokeWidth: "0.9", opacity: "0.7" }), /* @__PURE__ */ React.createElement("circle", { cx: "168", cy: "54", r: "5.5", fill: "none", stroke: T.heroLine, strokeWidth: "0.7", opacity: "0.55" }), /* @__PURE__ */ React.createElement("circle", { cx: "192", cy: "70", r: "3.6", fill: "none", stroke: T.heroLine, strokeWidth: "0.7", opacity: "0.45" }), /* @__PURE__ */ React.createElement("circle", { cx: "184", cy: "48", r: "2.2", fill: "none", stroke: T.heroLine, strokeWidth: "0.7", opacity: "0.4" }), /* @__PURE__ */ React.createElement("circle", { cx: "170", cy: "72", r: "2.6", fill: "none", stroke: T.heroLine, strokeWidth: "0.7", opacity: "0.4" })), /* @__PURE__ */ React.createElement("circle", { cx: "318", cy: "48", r: "3", fill: T.heroStar }), /* @__PURE__ */ React.createElement("circle", { cx: "318", cy: "48", r: "6.2", fill: "none", stroke: T.heroStar, strokeWidth: "0.7", opacity: "0.6" }), /* @__PURE__ */ React.createElement("circle", { cx: "74", cy: "92", r: "4.6", fill: "none", stroke: T.heroLine, strokeWidth: "1" }), /* @__PURE__ */ React.createElement("ellipse", { cx: "74", cy: "92", rx: "8.4", ry: "2.6", fill: "none", stroke: T.heroLine, strokeWidth: "0.7", transform: "rotate(-16 74 92)" }), /* @__PURE__ */ React.createElement("path", { d: star4(40, 34, 6), fill: T.heroStar, opacity: "0.85" }), /* @__PURE__ */ React.createElement("path", { d: star4(308, 104, 5), fill: T.heroStar, opacity: "0.7" }), /* @__PURE__ */ React.createElement("path", { d: star4(120, 18, 3.6), fill: T.heroStar, opacity: "0.55" }), /* @__PURE__ */ React.createElement("path", { d: star4(258, 22, 4.4), fill: T.heroStar, opacity: "0.65" }), /* @__PURE__ */ React.createElement("path", { d: star4(28, 98, 3.2), fill: T.heroStar, opacity: "0.5" }), /* @__PURE__ */ React.createElement("circle", { cx: "96", cy: "48", r: "1.1", fill: T.heroStar, opacity: "0.6" }), /* @__PURE__ */ React.createElement("circle", { cx: "276", cy: "78", r: "1.1", fill: T.heroStar, opacity: "0.6" }), /* @__PURE__ */ React.createElement("circle", { cx: "226", cy: "14", r: "1", fill: T.heroStar, opacity: "0.5" }), /* @__PURE__ */ React.createElement("circle", { cx: "140", cy: "110", r: "1", fill: T.heroStar, opacity: "0.5" }));
 }
-
-/* Logo mark — crescent in orbit ring */
-function LogoMark({ T, size=30 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
-      <circle cx="32" cy="32" r="14" fill="none" stroke={T.gold} strokeWidth="2"/>
-      <path d="M38 23a11 11 0 1 0 3.4 15.4A9 9 0 0 1 38 23z" fill={T.ink}/>
-      <ellipse cx="32" cy="32" rx="24" ry="8.6" fill="none" stroke={T.gold} strokeWidth="1.3" transform="rotate(-18 32 32)"/>
-      <circle cx="52" cy="24" r="2" fill={T.gold}/>
-    </svg>
-  );
+function LogoMark({ T, size = 30 }) {
+  return /* @__PURE__ */ React.createElement("svg", { width: size, height: size, viewBox: "0 0 64 64", "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("circle", { cx: "32", cy: "32", r: "14", fill: "none", stroke: T.gold, strokeWidth: "2" }), /* @__PURE__ */ React.createElement("path", { d: "M38 23a11 11 0 1 0 3.4 15.4A9 9 0 0 1 38 23z", fill: T.ink }), /* @__PURE__ */ React.createElement("ellipse", { cx: "32", cy: "32", rx: "24", ry: "8.6", fill: "none", stroke: T.gold, strokeWidth: "1.3", transform: "rotate(-18 32 32)" }), /* @__PURE__ */ React.createElement("circle", { cx: "52", cy: "24", r: "2", fill: T.gold }));
 }
-
-/* Section ornament — hairline with diamond */
 function Ornament({ T }) {
-  return (
-    <svg viewBox="0 0 220 10" style={{width:160, display:"block", margin:"0 auto"}} aria-hidden="true">
-      <line x1="0" y1="5" x2="96" y2="5" stroke={T.gold} strokeWidth="0.8" opacity="0.6"/>
-      <rect x="106" y="1" width="8" height="8" fill="none" stroke={T.gold} strokeWidth="0.9" transform="rotate(45 110 5)"/>
-      <line x1="124" y1="5" x2="220" y2="5" stroke={T.gold} strokeWidth="0.8" opacity="0.6"/>
-    </svg>
-  );
+  return /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 220 10", style: { width: 160, display: "block", margin: "0 auto" }, "aria-hidden": "true" }, /* @__PURE__ */ React.createElement("line", { x1: "0", y1: "5", x2: "96", y2: "5", stroke: T.gold, strokeWidth: "0.8", opacity: "0.6" }), /* @__PURE__ */ React.createElement("rect", { x: "106", y: "1", width: "8", height: "8", fill: "none", stroke: T.gold, strokeWidth: "0.9", transform: "rotate(45 110 5)" }), /* @__PURE__ */ React.createElement("line", { x1: "124", y1: "5", x2: "220", y2: "5", stroke: T.gold, strokeWidth: "0.8", opacity: "0.6" }));
 }
-
-/* ─────────── UI atoms ─────────── */
-function Slider({ value, min, max, step=1, onChange, color, T }) {
-  const pct = ((value-min)/(max-min))*100;
-  return (
-    <input type="range" min={min} max={max} step={step} value={value}
-      onChange={e => onChange(Number(e.target.value))}
-      className="lx-slider"
-      style={{ background:`linear-gradient(to right, ${color} ${pct}%, ${T.track} ${pct}%)`, "--thumb-color":color, "--thumb-bg":T.card }} />
+function Slider({ value, min, max, step = 1, onChange, color, T }) {
+  const pct = (value - min) / (max - min) * 100;
+  return /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type: "range",
+      min,
+      max,
+      step,
+      value,
+      onChange: (e) => onChange(Number(e.target.value)),
+      className: "lx-slider",
+      style: { background: `linear-gradient(to right, ${color} ${pct}%, ${T.track} ${pct}%)`, "--thumb-color": color, "--thumb-bg": T.card }
+    }
   );
 }
 function SliderRow({ label, valueLabel, T, children }) {
-  return (
-    <div style={{marginBottom:18}}>
-      <div style={{display:"flex", justifyContent:"space-between", alignItems:"baseline", marginBottom:8}}>
-        <span style={{fontSize:10, fontWeight:600, letterSpacing:"0.18em", textTransform:"uppercase", color:T.inkSoft}}>{label}</span>
-        <span style={{fontSize:17, fontWeight:600, color:T.ink, fontFamily:T.display}}>{valueLabel}</span>
-      </div>
-      {children}
-    </div>
-  );
+  return /* @__PURE__ */ React.createElement("div", { style: { marginBottom: 18 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 10, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", color: T.inkSoft } }, label), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 17, fontWeight: 600, color: T.ink, fontFamily: T.display } }, valueLabel)), children);
 }
 function Card({ title, icon, accent, T, children, sub }) {
-  return (
-    <section className="lx-fade" style={{background:T.card, border:`1px solid ${T.border}`, borderRadius:14, padding:"22px 20px", marginBottom:18, boxShadow:"0 1px 2px rgba(20,20,40,0.04)"}}>
-      <div style={{display:"flex", alignItems:"center", gap:10, marginBottom: sub ? 4 : 18}}>
-        <span style={{color:accent, display:"flex"}}>{icon}</span>
-        <h3 style={{color:T.ink, fontFamily:T.display, fontSize:21, fontWeight:600, letterSpacing:"0.01em"}}>{title}</h3>
-        <span style={{flex:1, height:1, background:T.hairline, marginLeft:4}} />
-      </div>
-      {sub && <p style={{fontSize:12, color:T.inkSoft, marginBottom:16, lineHeight:1.6}}>{sub}</p>}
-      {children}
-    </section>
-  );
+  return /* @__PURE__ */ React.createElement("section", { className: "lx-fade", style: { background: T.card, border: `1px solid ${T.border}`, borderRadius: 14, padding: "22px 20px", marginBottom: 18, boxShadow: "0 1px 2px rgba(20,20,40,0.04)" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10, marginBottom: sub ? 4 : 18 } }, /* @__PURE__ */ React.createElement("span", { style: { color: accent, display: "flex" } }, icon), /* @__PURE__ */ React.createElement("h3", { style: { color: T.ink, fontFamily: T.display, fontSize: 21, fontWeight: 600, letterSpacing: "0.01em" } }, title), /* @__PURE__ */ React.createElement("span", { style: { flex: 1, height: 1, background: T.hairline, marginLeft: 4 } })), sub && /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12, color: T.inkSoft, marginBottom: 16, lineHeight: 1.6 } }, sub), children);
 }
-function Btn({ onClick, T, children, variant="primary", accent, half }) {
-  const styles = variant==="primary"
-    ? { background:T.ink, color:T.bg, border:`1px solid ${T.ink}` }
-    : variant==="gold"
-    ? { background:"transparent", color:T.gold, border:`1px solid ${T.gold}` }
-    : { background:"transparent", color:accent||T.ink, border:`1px solid ${accent||T.border}` };
-  return (
-    <button onClick={onClick}
-      style={{ ...styles, borderRadius:10, padding:"13px 0", fontSize:11.5, fontWeight:600,
-        letterSpacing:"0.2em", textTransform:"uppercase", cursor:"pointer",
-        width: half ? "auto" : "100%", flex: half ? 1 : undefined, fontFamily:T.body,
-        transition:"opacity .15s" }}>
-      {children}
-    </button>
+function Btn({ onClick, T, children, variant = "primary", accent, half }) {
+  const styles = variant === "primary" ? { background: T.ink, color: T.bg, border: `1px solid ${T.ink}` } : variant === "gold" ? { background: "transparent", color: T.gold, border: `1px solid ${T.gold}` } : { background: "transparent", color: accent || T.ink, border: `1px solid ${accent || T.border}` };
+  return /* @__PURE__ */ React.createElement(
+    "button",
+    {
+      onClick,
+      style: {
+        ...styles,
+        borderRadius: 10,
+        padding: "13px 0",
+        fontSize: 11.5,
+        fontWeight: 600,
+        letterSpacing: "0.2em",
+        textTransform: "uppercase",
+        cursor: "pointer",
+        width: half ? "auto" : "100%",
+        flex: half ? 1 : void 0,
+        fontFamily: T.body,
+        transition: "opacity .15s"
+      }
+    },
+    children
   );
 }
 function Chip({ active, onClick, color, T, children }) {
-  return (
-    <button onClick={onClick}
-      style={{ padding:"7px 18px", borderRadius:99, fontSize:11, fontWeight:600, letterSpacing:"0.1em",
-        textTransform:"uppercase", cursor:"pointer",
+  return /* @__PURE__ */ React.createElement(
+    "button",
+    {
+      onClick,
+      style: {
+        padding: "7px 18px",
+        borderRadius: 99,
+        fontSize: 11,
+        fontWeight: 600,
+        letterSpacing: "0.1em",
+        textTransform: "uppercase",
+        cursor: "pointer",
         background: active ? color : "transparent",
         color: active ? T.card : T.inkSoft,
-        border: `1px solid ${active ? color : T.border}` }}>
-      {children}
-    </button>
+        border: `1px solid ${active ? color : T.border}`
+      }
+    },
+    children
   );
 }
-function TextInput({ value, onChange, onBlur, placeholder, T, type="text" }) {
-  return (
-    <input type={type} value={value} placeholder={placeholder} onChange={onChange} onBlur={onBlur}
-      style={{ width:"100%", padding:"12px 16px", fontSize:14, fontWeight:500, outline:"none",
-        background:T.inputBg, color:T.ink, border:`1px solid ${T.border}`, borderRadius:10,
-        fontFamily:T.body, letterSpacing:"0.02em", colorScheme: T.name==="Midnight" ? "dark" : "light" }} />
+function TextInput({ value, onChange, onBlur, placeholder, T, type = "text" }) {
+  return /* @__PURE__ */ React.createElement(
+    "input",
+    {
+      type,
+      value,
+      placeholder,
+      onChange,
+      onBlur,
+      style: {
+        width: "100%",
+        padding: "12px 16px",
+        fontSize: 14,
+        fontWeight: 500,
+        outline: "none",
+        background: T.inputBg,
+        color: T.ink,
+        border: `1px solid ${T.border}`,
+        borderRadius: 10,
+        fontFamily: T.body,
+        letterSpacing: "0.02em",
+        colorScheme: T.name === "Midnight" ? "dark" : "light"
+      }
+    }
   );
 }
 function Label({ T, children }) {
-  return <label style={{fontSize:10, fontWeight:600, letterSpacing:"0.18em", textTransform:"uppercase", display:"block", marginBottom:8, color:T.inkSoft}}>{children}</label>;
+  return /* @__PURE__ */ React.createElement("label", { style: { fontSize: 10, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", display: "block", marginBottom: 8, color: T.inkSoft } }, children);
 }
-
-/* ─────────── WHO percentile chart ─────────── */
 function PercentileChart({ entries, birthDate, metric, table, color, unit, T }) {
   if (!birthDate)
-    return <p style={{fontSize:12.5, color:T.inkSoft, lineHeight:1.6}}>Add the birth date in Setup to plot percentile curves.</p>;
-
-  const pts = entries.map(g => ({m:ageInMonths(birthDate,g.date), v:g[metric]})).filter(p => p.m>=0 && p.v);
-  const maxM = Math.min(24, Math.max(6, Math.ceil((pts.length ? Math.max(...pts.map(p=>p.m)) : 0)+2)));
-
-  const W=320, H=190, PL=34, PR=8, PT=10, PB=22;
-  const yMin = interp(table.months, table.p3, 0)*0.95;
-  const yMax = interp(table.months, table.p97, maxM)*1.03;
-  const X = m => PL + (m/maxM)*(W-PL-PR);
-  const Y = v => PT + (1-(v-yMin)/(yMax-yMin))*(H-PT-PB);
-  const curve = vals => Array.from({length:41}, (_,i) => { const m=(i/40)*maxM; return `${X(m)},${Y(interp(table.months, vals, m))}`; });
-  const band = (lo,hi) => `${curve(hi).join(" ")} ${curve(lo).reverse().join(" ")}`;
-  const gridM = maxM<=8 ? [0,2,4,6,8].filter(m=>m<=maxM) : [0,6,12,18,24].filter(m=>m<=maxM);
-
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{width:"100%"}}>
-      <polygon points={band(table.p3, table.p97)} fill={color} opacity="0.10" />
-      <polygon points={band(table.p15, table.p85)} fill={color} opacity="0.14" />
-      <polyline points={curve(table.p50).join(" ")} fill="none" stroke={color} strokeWidth="1.2" strokeDasharray="4 3" opacity="0.65" />
-      {gridM.map(m => (
-        <g key={m}>
-          <line x1={X(m)} y1={PT} x2={X(m)} y2={H-PB} stroke={T.hairline} strokeWidth="1" />
-          <text x={X(m)} y={H-7} textAnchor="middle" fontSize="8.5" fontWeight="600" letterSpacing="0.08em" fill={T.faint}>{m} MO</text>
-        </g>
-      ))}
-      {[0.25,0.5,0.75].map(f => {
-        const v = yMin + f*(yMax-yMin);
-        return <text key={f} x={PL-5} y={Y(v)+3} textAnchor="end" fontSize="8.5" fontWeight="600" fill={T.faint}>{Math.round(v)}</text>;
-      })}
-      {pts.length>1 && <polyline points={pts.map(p=>`${X(p.m)},${Y(p.v)}`).join(" ")} fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" />}
-      {pts.map((p,i) => <circle key={i} cx={X(p.m)} cy={Y(p.v)} r="4" fill={T.card} stroke={color} strokeWidth="2" />)}
-      <text x={W-PR} y={PT+8} textAnchor="end" fontSize="8.5" fontWeight="600" letterSpacing="0.06em" fill={T.faint}>{unit.toUpperCase()} · 3–97TH %ILE</text>
-    </svg>
-  );
+    return /* @__PURE__ */ React.createElement("p", { style: { fontSize: 12.5, color: T.inkSoft, lineHeight: 1.6 } }, "Add the birth date in Setup to plot percentile curves.");
+  const pts = entries.map((g) => ({ m: ageInMonths(birthDate, g.date), v: g[metric] })).filter((p) => p.m >= 0 && p.v);
+  const maxM = Math.min(24, Math.max(6, Math.ceil((pts.length ? Math.max(...pts.map((p) => p.m)) : 0) + 2)));
+  const W = 320, H = 190, PL = 34, PR = 8, PT = 10, PB = 22;
+  const yMin = interp(table.months, table.p3, 0) * 0.95;
+  const yMax = interp(table.months, table.p97, maxM) * 1.03;
+  const X = (m) => PL + m / maxM * (W - PL - PR);
+  const Y = (v) => PT + (1 - (v - yMin) / (yMax - yMin)) * (H - PT - PB);
+  const curve = (vals) => Array.from({ length: 41 }, (_, i) => {
+    const m = i / 40 * maxM;
+    return `${X(m)},${Y(interp(table.months, vals, m))}`;
+  });
+  const band = (lo, hi) => `${curve(hi).join(" ")} ${curve(lo).reverse().join(" ")}`;
+  const gridM = maxM <= 8 ? [0, 2, 4, 6, 8].filter((m) => m <= maxM) : [0, 6, 12, 18, 24].filter((m) => m <= maxM);
+  return /* @__PURE__ */ React.createElement("svg", { viewBox: `0 0 ${W} ${H}`, style: { width: "100%" } }, /* @__PURE__ */ React.createElement("polygon", { points: band(table.p3, table.p97), fill: color, opacity: "0.10" }), /* @__PURE__ */ React.createElement("polygon", { points: band(table.p15, table.p85), fill: color, opacity: "0.14" }), /* @__PURE__ */ React.createElement("polyline", { points: curve(table.p50).join(" "), fill: "none", stroke: color, strokeWidth: "1.2", strokeDasharray: "4 3", opacity: "0.65" }), gridM.map((m) => /* @__PURE__ */ React.createElement("g", { key: m }, /* @__PURE__ */ React.createElement("line", { x1: X(m), y1: PT, x2: X(m), y2: H - PB, stroke: T.hairline, strokeWidth: "1" }), /* @__PURE__ */ React.createElement("text", { x: X(m), y: H - 7, textAnchor: "middle", fontSize: "8.5", fontWeight: "600", letterSpacing: "0.08em", fill: T.faint }, m, " MO"))), [0.25, 0.5, 0.75].map((f) => {
+    const v = yMin + f * (yMax - yMin);
+    return /* @__PURE__ */ React.createElement("text", { key: f, x: PL - 5, y: Y(v) + 3, textAnchor: "end", fontSize: "8.5", fontWeight: "600", fill: T.faint }, Math.round(v));
+  }), pts.length > 1 && /* @__PURE__ */ React.createElement("polyline", { points: pts.map((p) => `${X(p.m)},${Y(p.v)}`).join(" "), fill: "none", stroke: color, strokeWidth: "2.2", strokeLinecap: "round" }), pts.map((p, i) => /* @__PURE__ */ React.createElement("circle", { key: i, cx: X(p.m), cy: Y(p.v), r: "4", fill: T.card, stroke: color, strokeWidth: "2" })), /* @__PURE__ */ React.createElement("text", { x: W - PR, y: PT + 8, textAnchor: "end", fontSize: "8.5", fontWeight: "600", letterSpacing: "0.06em", fill: T.faint }, unit.toUpperCase(), " \xB7 3\u201397TH %ILE"));
 }
-
-/* ─────────── weekly bars ─────────── */
 function WeekBars({ data, field, color, T, fmt }) {
-  const max = Math.max(...data.map(d => d[field]), 1);
-  return (
-    <div style={{display:"flex", alignItems:"flex-end", justifyContent:"space-between", gap:10, height:140, paddingTop:8}}>
-      {data.map((d,i) => {
-        const h = (d[field]/max)*100;
-        const isLast = i === data.length-1;
-        return (
-          <div key={i} style={{flex:1, display:"flex", flexDirection:"column", alignItems:"center", gap:7, height:"100%", justifyContent:"flex-end"}}>
-            <span style={{fontSize:9.5, fontWeight:600, color:T.inkSoft}}>{d[field]>0 ? (fmt ? fmt(d[field]) : d[field]) : ""}</span>
-            <div style={{width:"58%", borderRadius:"4px 4px 1px 1px", height:`${Math.max(h,2.5)}%`, background: isLast ? color : T.track, border: isLast ? "none" : `1px solid ${T.border}`}} />
-            <span style={{fontSize:9.5, fontWeight:600, letterSpacing:"0.08em", color: isLast ? color : T.faint}}>{d.label.toUpperCase()}</span>
-          </div>
-        );
-      })}
-    </div>
-  );
+  const max = Math.max(...data.map((d) => d[field]), 1);
+  return /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 10, height: 140, paddingTop: 8 } }, data.map((d, i) => {
+    const h = d[field] / max * 100;
+    const isLast = i === data.length - 1;
+    return /* @__PURE__ */ React.createElement("div", { key: i, style: { flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 7, height: "100%", justifyContent: "flex-end" } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 9.5, fontWeight: 600, color: T.inkSoft } }, d[field] > 0 ? fmt ? fmt(d[field]) : d[field] : ""), /* @__PURE__ */ React.createElement("div", { style: { width: "58%", borderRadius: "4px 4px 1px 1px", height: `${Math.max(h, 2.5)}%`, background: isLast ? color : T.track, border: isLast ? "none" : `1px solid ${T.border}` } }), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 9.5, fontWeight: 600, letterSpacing: "0.08em", color: isLast ? color : T.faint } }, d.label.toUpperCase()));
+  }));
 }
-
-/* ═════════════ main app ═════════════ */
 function LittleAstronaut() {
   const [data, setData] = useState(loadLocal);
   const [familyCode, setFamilyCode] = useState(() => localStorage.getItem(CODE_KEY) || "");
@@ -433,10 +419,7 @@ function LittleAstronaut() {
   const [toast, setToast] = useState(null);
   const saveTimer = useRef(null);
   const applyingRemote = useRef(false);
-
   const T = THEMES[data.theme] || THEMES.porcelain;
-
-  /* inputs */
   const [feedMl, setFeedMl] = useState(90);
   const [feedAgo, setFeedAgo] = useState(0);
   const [feedType, setFeedType] = useState("bottle");
@@ -454,450 +437,332 @@ function LittleAstronaut() {
   const [gWeight, setGWeight] = useState(3.5);
   const [gHeight, setGHeight] = useState(50);
   const [gHead, setGHead] = useState(35);
-
-  /* Firestore real-time sync */
   useEffect(() => {
-    if (!FB_READY || !familyCode) { setSyncState(FB_READY ? "no-code" : "local"); return; }
+    if (!FB_READY || !familyCode) {
+      setSyncState(FB_READY ? "no-code" : "local");
+      return;
+    }
     setSyncState("connecting");
     let unsub = null, cancelled = false;
-    firebase.auth().signInAnonymously()
-      .then(() => {
-        if (cancelled) return;
-        const ref = db.collection("families").doc(familyCode);
-        unsub = ref.onSnapshot(
-          snap => {
-            if (snap.metadata.hasPendingWrites) return;
-            if (snap.exists) {
-              applyingRemote.current = true;
-              const remote = {...emptyData, ...snap.data()};
-              remote.theme = THEME_MIGRATE[remote.theme] || remote.theme;
-              if (!THEMES[remote.theme]) remote.theme = "porcelain";
-              setData(remote);
-              saveLocal(remote);
-              applyingRemote.current = false;
-            }
-            setSyncState(snap.metadata.fromCache ? "offline" : "synced");
-          },
-          () => setSyncState("error")
-        );
-      })
-      .catch(() => setSyncState("error"));
-    return () => { cancelled = true; if (unsub) unsub(); };
+    firebase.auth().signInAnonymously().then(() => {
+      if (cancelled) return;
+      const ref = db.collection("families").doc(familyCode);
+      unsub = ref.onSnapshot(
+        (snap) => {
+          if (snap.metadata.hasPendingWrites) return;
+          if (snap.exists) {
+            applyingRemote.current = true;
+            const remote = { ...emptyData, ...snap.data() };
+            remote.theme = THEME_MIGRATE[remote.theme] || remote.theme;
+            if (!THEMES[remote.theme]) remote.theme = "porcelain";
+            setData(remote);
+            saveLocal(remote);
+            applyingRemote.current = false;
+          }
+          setSyncState(snap.metadata.fromCache ? "offline" : "synced");
+        },
+        () => setSyncState("error")
+      );
+    }).catch(() => setSyncState("error"));
+    return () => {
+      cancelled = true;
+      if (unsub) unsub();
+    };
   }, [familyCode]);
-
   useEffect(() => {
-    const lastG = data.growth[data.growth.length-1];
-    if (lastG) { setGWeight(lastG.weightKg); setGHeight(lastG.heightCm); setGHead(lastG.headCm); }
-    // eslint-disable-next-line
+    const lastG = data.growth[data.growth.length - 1];
+    if (lastG) {
+      setGWeight(lastG.weightKg);
+      setGHeight(lastG.heightCm);
+      setGHead(lastG.headCm);
+    }
   }, []);
-
   useEffect(() => {
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute("content", T.bg);
     document.body.style.background = T.bg;
   }, [T.bg]);
-
-  const save = next => {
+  const save = (next) => {
     setData(next);
     saveLocal(next);
     if (FB_READY && familyCode && !applyingRemote.current) {
       clearTimeout(saveTimer.current);
       saveTimer.current = setTimeout(() => {
-        db.collection("families").doc(familyCode).set(next)
-          .then(() => setSyncState("synced"))
-          .catch(() => setSyncState("error"));
+        db.collection("families").doc(familyCode).set(next).then(() => setSyncState("synced")).catch(() => setSyncState("error"));
       }, 400);
     }
   };
-  const ping = msg => { setToast(msg); setTimeout(() => setToast(null), 1800); };
-
+  const ping = (msg) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 1800);
+  };
   const connectFamily = () => {
     const code = codeInput.trim();
     if (!code) return ping("Enter a family code first");
     if (code.length < 8) return ping("Use at least 8 characters");
     localStorage.setItem(CODE_KEY, code);
     setFamilyCode(code);
-    ping("Connecting…");
+    ping("Connecting\u2026");
   };
-
-  /* loggers */
-  const logFeed = () => { save({...data, feeds:[...data.feeds, {id:uid(), ml:feedMl, type:feedType, time:minutesAgoToISO(feedAgo)}]}); ping(`Logged ${feedMl} mL`); setFeedAgo(0); };
-  const logPump = () => { save({...data, pumps:[...data.pumps, {id:uid(), ml:pumpMl, side:pumpSide, time:minutesAgoToISO(pumpAgo)}]}); ping(`Pumped ${pumpMl} mL`); setPumpAgo(0); };
-  const logSleep = () => { save({...data, sleeps:[...data.sleeps, {id:uid(), durationMin:sleepDur, kind:sleepKind, time:minutesAgoToISO(sleepAgo)}]}); ping(`Logged ${hrsMin(sleepDur)} of sleep`); setSleepAgo(0); };
+  const logFeed = () => {
+    save({ ...data, feeds: [...data.feeds, { id: uid(), ml: feedMl, type: feedType, time: minutesAgoToISO(feedAgo) }] });
+    ping(`Logged ${feedMl} mL`);
+    setFeedAgo(0);
+  };
+  const logPump = () => {
+    save({ ...data, pumps: [...data.pumps, { id: uid(), ml: pumpMl, side: pumpSide, time: minutesAgoToISO(pumpAgo) }] });
+    ping(`Pumped ${pumpMl} mL`);
+    setPumpAgo(0);
+  };
+  const logSleep = () => {
+    save({ ...data, sleeps: [...data.sleeps, { id: uid(), durationMin: sleepDur, kind: sleepKind, time: minutesAgoToISO(sleepAgo) }] });
+    ping(`Logged ${hrsMin(sleepDur)} of sleep`);
+    setSleepAgo(0);
+  };
   const logMed = () => {
     if (!medName.trim()) return ping("Add a medication name first");
-    save({...data, meds:[...data.meds, {id:uid(), name:medName.trim(), doseMl:medDose, time:minutesAgoToISO(medAgo)}]});
-    ping(`Logged ${medName}`); setMedAgo(0);
+    save({ ...data, meds: [...data.meds, { id: uid(), name: medName.trim(), doseMl: medDose, time: minutesAgoToISO(medAgo) }] });
+    ping(`Logged ${medName}`);
+    setMedAgo(0);
   };
-  const logDiaper = kind => { save({...data, diapers:[...data.diapers, {id:uid(), kind, time:new Date().toISOString()}]}); ping(kind==="wet" ? "Wet diaper logged" : "Soiled diaper logged"); };
-  const logTemp = () => { save({...data, temps:[...data.temps, {id:uid(), c:tempC, time:new Date().toISOString()}]}); ping(`Temperature ${tempC.toFixed(1)}°C`); };
-  const logTummy = () => { save({...data, tummy:[...data.tummy, {id:uid(), min:tummyMin, time:new Date().toISOString()}]}); ping(`Tummy time ${tummyMin} min`); };
-  const logGrowth = () => { save({...data, growth:[...data.growth, {id:uid(), date:new Date().toISOString(), weightKg:gWeight, heightCm:gHeight, headCm:gHead}]}); ping("Growth check-in saved"); };
-  const toggleMilestone = key => {
-    const ms = {...data.milestones};
-    if (ms[key]) delete ms[key]; else ms[key] = new Date().toISOString();
-    save({...data, milestones:ms});
+  const logDiaper = (kind) => {
+    save({ ...data, diapers: [...data.diapers, { id: uid(), kind, time: (/* @__PURE__ */ new Date()).toISOString() }] });
+    ping(kind === "wet" ? "Wet diaper logged" : "Soiled diaper logged");
   };
-  const removeEntry = (listKey, id) => save({...data, [listKey]: data[listKey].filter(e => e.id !== id)});
-
-  /* today summary */
+  const logTemp = () => {
+    save({ ...data, temps: [...data.temps, { id: uid(), c: tempC, time: (/* @__PURE__ */ new Date()).toISOString() }] });
+    ping(`Temperature ${tempC.toFixed(1)}\xB0C`);
+  };
+  const logTummy = () => {
+    save({ ...data, tummy: [...data.tummy, { id: uid(), min: tummyMin, time: (/* @__PURE__ */ new Date()).toISOString() }] });
+    ping(`Tummy time ${tummyMin} min`);
+  };
+  const logGrowth = () => {
+    save({ ...data, growth: [...data.growth, { id: uid(), date: (/* @__PURE__ */ new Date()).toISOString(), weightKg: gWeight, heightCm: gHeight, headCm: gHead }] });
+    ping("Growth check-in saved");
+  };
+  const toggleMilestone = (key) => {
+    const ms = { ...data.milestones };
+    if (ms[key]) delete ms[key];
+    else ms[key] = (/* @__PURE__ */ new Date()).toISOString();
+    save({ ...data, milestones: ms });
+  };
+  const removeEntry = (listKey, id) => save({ ...data, [listKey]: data[listKey].filter((e) => e.id !== id) });
   const today = useMemo(() => ({
-    ml: data.feeds.filter(f=>isToday(f.time)).reduce((a,f)=>a+f.ml,0),
-    pumped: data.pumps.filter(p=>isToday(p.time)).reduce((a,p)=>a+p.ml,0),
-    sleepMin: data.sleeps.filter(s=>isToday(s.time)).reduce((a,s)=>a+s.durationMin,0),
-    diapers: data.diapers.filter(d=>isToday(d.time)).length,
-    meds: data.meds.filter(m=>isToday(m.time)).length,
+    ml: data.feeds.filter((f) => isToday(f.time)).reduce((a, f) => a + f.ml, 0),
+    pumped: data.pumps.filter((p) => isToday(p.time)).reduce((a, p) => a + p.ml, 0),
+    sleepMin: data.sleeps.filter((s) => isToday(s.time)).reduce((a, s) => a + s.durationMin, 0),
+    diapers: data.diapers.filter((d) => isToday(d.time)).length,
+    meds: data.meds.filter((m) => isToday(m.time)).length
   }), [data]);
-
   const week = useMemo(() => {
     const days = [];
-    for (let i=6;i>=0;i--){
-      const d = new Date(); d.setDate(d.getDate()-i); d.setHours(0,0,0,0);
-      const end = new Date(d); end.setDate(end.getDate()+1);
-      const inDay = iso => { const t=new Date(iso); return t>=d && t<end; };
+    for (let i = 6; i >= 0; i--) {
+      const d = /* @__PURE__ */ new Date();
+      d.setDate(d.getDate() - i);
+      d.setHours(0, 0, 0, 0);
+      const end = new Date(d);
+      end.setDate(end.getDate() + 1);
+      const inDay = (iso) => {
+        const t = new Date(iso);
+        return t >= d && t < end;
+      };
       days.push({
-        label: d.toLocaleDateString([], {weekday:"narrow"}),
-        ml: data.feeds.filter(f=>inDay(f.time)).reduce((a,f)=>a+f.ml,0),
-        pumped: data.pumps.filter(p=>inDay(p.time)).reduce((a,p)=>a+p.ml,0),
-        sleep: data.sleeps.filter(s=>inDay(s.time)).reduce((a,s)=>a+s.durationMin,0),
-        tummy: data.tummy.filter(t=>inDay(t.time)).reduce((a,t)=>a+t.min,0),
+        label: d.toLocaleDateString([], { weekday: "narrow" }),
+        ml: data.feeds.filter((f) => inDay(f.time)).reduce((a, f) => a + f.ml, 0),
+        pumped: data.pumps.filter((p) => inDay(p.time)).reduce((a, p) => a + p.ml, 0),
+        sleep: data.sleeps.filter((s) => inDay(s.time)).reduce((a, s) => a + s.durationMin, 0),
+        tummy: data.tummy.filter((t) => inDay(t.time)).reduce((a, t) => a + t.min, 0)
       });
     }
     return days;
   }, [data]);
-
   const recentLog = useMemo(() => {
-    const tag = (arr,t) => arr.map(e => ({...e, _t:t}));
+    const tag = (arr, t) => arr.map((e) => ({ ...e, _t: t }));
     return [
-      ...tag(data.feeds,"feed"), ...tag(data.pumps,"pump"), ...tag(data.sleeps,"sleep"),
-      ...tag(data.meds,"med"), ...tag(data.diapers,"diaper"),
-      ...tag(data.temps,"temp"), ...tag(data.tummy,"tummy"),
-    ].sort((a,b) => new Date(b.time)-new Date(a.time)).slice(0,14);
+      ...tag(data.feeds, "feed"),
+      ...tag(data.pumps, "pump"),
+      ...tag(data.sleeps, "sleep"),
+      ...tag(data.meds, "med"),
+      ...tag(data.diapers, "diaper"),
+      ...tag(data.temps, "temp"),
+      ...tag(data.tummy, "tummy")
+    ].sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 14);
   }, [data]);
-
-  const listKeyFor = {feed:"feeds", pump:"pumps", sleep:"sleeps", med:"meds", diaper:"diapers", temp:"temps", tummy:"tummy"};
+  const listKeyFor = { feed: "feeds", pump: "pumps", sleep: "sleeps", med: "meds", diaper: "diapers", temp: "temps", tummy: "tummy" };
   const logIcon = {
-    feed: <IBottle size={16}/>, pump: <IDrop size={16}/>, sleep: <IMoon size={16}/>,
-    med: <IPill size={16}/>, diaper: <IDiaper size={16}/>, temp: <IThermo size={16}/>, tummy: <ISun size={16}/>,
+    feed: /* @__PURE__ */ React.createElement(IBottle, { size: 16 }),
+    pump: /* @__PURE__ */ React.createElement(IDrop, { size: 16 }),
+    sleep: /* @__PURE__ */ React.createElement(IMoon, { size: 16 }),
+    med: /* @__PURE__ */ React.createElement(IPill, { size: 16 }),
+    diaper: /* @__PURE__ */ React.createElement(IDiaper, { size: 16 }),
+    temp: /* @__PURE__ */ React.createElement(IThermo, { size: 16 }),
+    tummy: /* @__PURE__ */ React.createElement(ISun, { size: 16 })
   };
-  const logColor = {feed:T.feed, pump:T.pump, sleep:T.sleep, med:T.med, diaper:T.diaper, temp:T.health, tummy:T.health};
-
+  const logColor = { feed: T.feed, pump: T.pump, sleep: T.sleep, med: T.med, diaper: T.diaper, temp: T.health, tummy: T.health };
   const name = data.babyName || "Little Astronaut";
   const age = ageString(data.birthDate);
-
   const syncBadge = {
-    synced:   { txt:"Synced", dot:"#6FA886" },
-    offline:  { txt:"Offline · will sync", dot:T.gold },
-    connecting:{ txt:"Connecting", dot:T.gold },
-    "no-code":{ txt:"Set family code to sync", dot:T.faint },
-    local:    { txt:"This device only", dot:T.faint },
-    error:    { txt:"Sync error", dot:"#C07070" },
+    synced: { txt: "Synced", dot: "#6FA886" },
+    offline: { txt: "Offline \xB7 will sync", dot: T.gold },
+    connecting: { txt: "Connecting", dot: T.gold },
+    "no-code": { txt: "Set family code to sync", dot: T.faint },
+    local: { txt: "This device only", dot: T.faint },
+    error: { txt: "Sync error", dot: "#C07070" }
   }[syncState];
-
-  const shell = {maxWidth:460, margin:"0 auto", padding:"0 20px"};
-
-  return (
-    <div style={{minHeight:"100vh", paddingBottom:116, background:T.bg, color:T.ink, fontFamily:T.body}}>
-
-      {/* ── masthead ── */}
-      <header style={{...shell, paddingTop:"max(20px, env(safe-area-inset-top))"}}>
-        <div style={{display:"flex", alignItems:"center", justifyContent:"space-between", paddingBottom:14, borderBottom:`1px solid ${T.hairline}`}}>
-          <div style={{display:"flex", alignItems:"center", gap:10}}>
-            <LogoMark T={T} />
-            <span style={{fontFamily:T.display, fontSize:17, fontWeight:600, letterSpacing:"0.04em"}}>Little Astronaut</span>
-          </div>
-          <div style={{display:"flex", alignItems:"center", gap:6}}>
-            <span style={{width:6, height:6, borderRadius:"50%", background:syncBadge.dot}} />
-            <span style={{fontSize:9, fontWeight:600, letterSpacing:"0.16em", textTransform:"uppercase", color:T.inkSoft}}>{syncBadge.txt}</span>
-          </div>
-        </div>
-
-        {/* hero */}
-        <div style={{padding:"18px 0 6px", textAlign:"center"}}>
-          <HeroCelestial T={T} />
-          <h1 style={{fontFamily:T.display, fontSize:38, fontWeight:600, letterSpacing:"0.01em", marginTop:6, color:T.ink}}>{name}</h1>
-          {age && <p style={{fontFamily:T.display, fontStyle:"italic", fontSize:16, color:T.gold, marginTop:2}}>{age}</p>}
-          <div style={{marginTop:12}}><Ornament T={T} /></div>
-        </div>
-
-        {/* today's ledger */}
-        <div style={{display:"flex", justifyContent:"space-between", padding:"16px 4px 4px"}}>
-          {[
-            {v: today.ml, u:"mL", l:"Milk"},
-            {v: today.pumped, u:"mL", l:"Pumped"},
-            {v: hrsMin(today.sleepMin), u:"", l:"Sleep"},
-            {v: today.diapers, u:"", l:"Diapers"},
-            {v: today.meds, u:"", l:"Meds"},
-          ].map((s,i) => (
-            <div key={s.l} style={{flex:1, textAlign:"center", borderLeft: i>0 ? `1px solid ${T.hairline}` : "none"}}>
-              <div style={{fontFamily:T.display, fontSize:22, fontWeight:600, color:T.ink, lineHeight:1.1}}>
-                {s.v}{s.u && <span style={{fontSize:11, color:T.inkSoft, marginLeft:1}}>{s.u}</span>}
-              </div>
-              <div style={{fontSize:8.5, fontWeight:600, letterSpacing:"0.18em", textTransform:"uppercase", color:T.inkSoft, marginTop:3}}>{s.l}</div>
-            </div>
-          ))}
-        </div>
-      </header>
-
-      {/* ── content ── */}
-      <main style={{...shell, position:"relative", paddingTop:22}}>
-        {tab==="today" && <>
-          <Card title="Milk Feed" icon={<IBottle/>} accent={T.feed} T={T}>
-            <div style={{display:"flex", gap:8, marginBottom:18}}>
-              <Chip active={feedType==="bottle"} color={T.feed} T={T} onClick={()=>setFeedType("bottle")}>Bottle</Chip>
-              <Chip active={feedType==="breast"} color={T.feed} T={T} onClick={()=>setFeedType("breast")}>Breast</Chip>
-            </div>
-            <SliderRow label="Amount" valueLabel={`${feedMl} mL`} T={T}>
-              <Slider value={feedMl} min={10} max={300} step={5} onChange={setFeedMl} color={T.feed} T={T} />
-            </SliderRow>
-            <SliderRow label="When" valueLabel={feedAgo===0 ? "Just now" : `${fmtTime(minutesAgoToISO(feedAgo))} · ${feedAgo}m ago`} T={T}>
-              <Slider value={feedAgo} min={0} max={240} step={5} onChange={setFeedAgo} color={T.feed} T={T} />
-            </SliderRow>
-            <Btn T={T} onClick={logFeed}>Log Feed</Btn>
-          </Card>
-
-          <Card title="Pumping" icon={<IDrop/>} accent={T.pump} T={T}>
-            <div style={{display:"flex", gap:8, marginBottom:18}}>
-              {["left","right","both"].map(s => (
-                <Chip key={s} active={pumpSide===s} color={T.pump} T={T} onClick={()=>setPumpSide(s)}>{s}</Chip>
-              ))}
-            </div>
-            <SliderRow label="Amount" valueLabel={`${pumpMl} mL`} T={T}>
-              <Slider value={pumpMl} min={5} max={300} step={5} onChange={setPumpMl} color={T.pump} T={T} />
-            </SliderRow>
-            <SliderRow label="When" valueLabel={pumpAgo===0 ? "Just now" : `${pumpAgo}m ago`} T={T}>
-              <Slider value={pumpAgo} min={0} max={240} step={5} onChange={setPumpAgo} color={T.pump} T={T} />
-            </SliderRow>
-            <Btn T={T} onClick={logPump}>Log Session</Btn>
-          </Card>
-
-          <Card title="Sleep & Naps" icon={<IMoon/>} accent={T.sleep} T={T}>
-            <div style={{display:"flex", gap:8, marginBottom:18}}>
-              <Chip active={sleepKind==="nap"} color={T.sleep} T={T} onClick={()=>setSleepKind("nap")}>Nap</Chip>
-              <Chip active={sleepKind==="night"} color={T.sleep} T={T} onClick={()=>setSleepKind("night")}>Night</Chip>
-            </div>
-            <SliderRow label="Duration" valueLabel={hrsMin(sleepDur)} T={T}>
-              <Slider value={sleepDur} min={10} max={720} step={5} onChange={setSleepDur} color={T.sleep} T={T} />
-            </SliderRow>
-            <SliderRow label="Woke" valueLabel={sleepAgo===0 ? "Just now" : `${sleepAgo}m ago`} T={T}>
-              <Slider value={sleepAgo} min={0} max={240} step={5} onChange={setSleepAgo} color={T.sleep} T={T} />
-            </SliderRow>
-            <Btn T={T} onClick={logSleep}>Log Sleep</Btn>
-          </Card>
-
-          <Card title="Diaper" icon={<IDiaper/>} accent={T.diaper} T={T}>
-            <div style={{display:"flex", gap:12}}>
-              <Btn half variant="outline" accent={T.diaper} T={T} onClick={()=>logDiaper("wet")}>Wet</Btn>
-              <Btn half variant="outline" accent={T.diaper} T={T} onClick={()=>logDiaper("dirty")}>Soiled</Btn>
-            </div>
-          </Card>
-
-          <Card title="Medication" icon={<IPill/>} accent={T.med} T={T}>
-            <div style={{marginBottom:18}}>
-              <TextInput value={medName} onChange={e=>setMedName(e.target.value)} placeholder="Medication name" T={T} />
-            </div>
-            <SliderRow label="Dose" valueLabel={`${medDose} mL`} T={T}>
-              <Slider value={medDose} min={0.25} max={10} step={0.25} onChange={setMedDose} color={T.med} T={T} />
-            </SliderRow>
-            <SliderRow label="When" valueLabel={medAgo===0 ? "Just now" : `${medAgo}m ago`} T={T}>
-              <Slider value={medAgo} min={0} max={240} step={5} onChange={setMedAgo} color={T.med} T={T} />
-            </SliderRow>
-            <Btn T={T} onClick={logMed}>Log Medication</Btn>
-          </Card>
-
-          <Card title="Health & Play" icon={<IThermo/>} accent={T.health} T={T}>
-            <SliderRow label="Temperature" valueLabel={`${tempC.toFixed(1)} °C`} T={T}>
-              <Slider value={tempC} min={35} max={41} step={0.1} onChange={setTempC} color={T.health} T={T} />
-            </SliderRow>
-            <div style={{marginBottom:18}}><Btn variant="outline" accent={T.health} T={T} onClick={logTemp}>Log Temperature</Btn></div>
-            <SliderRow label="Tummy Time" valueLabel={`${tummyMin} min`} T={T}>
-              <Slider value={tummyMin} min={1} max={60} step={1} onChange={setTummyMin} color={T.health} T={T} />
-            </SliderRow>
-            <Btn variant="outline" accent={T.health} T={T} onClick={logTummy}>Log Tummy Time</Btn>
-          </Card>
-
-          {recentLog.length>0 && (
-            <Card title="Recent Activity" icon={<ISatellite/>} accent={T.gold} T={T}>
-              {recentLog.map(e => (
-                <div key={e.id} style={{display:"flex", alignItems:"center", gap:10, padding:"10px 0", borderBottom:`1px solid ${T.hairline}`}}>
-                  <span style={{color:logColor[e._t], display:"flex"}}>{logIcon[e._t]}</span>
-                  <div style={{flex:1, fontSize:13.5, fontWeight:500, color:T.ink}}>
-                    {e._t==="feed" && <>{e.ml} mL · {e.type}</>}
-                    {e._t==="pump" && <>Pumped {e.ml} mL · {e.side}</>}
-                    {e._t==="sleep" && <>{hrsMin(e.durationMin)} {e.kind}</>}
-                    {e._t==="med" && <>{e.name} · {e.doseMl} mL</>}
-                    {e._t==="diaper" && <>{e.kind==="wet" ? "Wet" : "Soiled"} diaper</>}
-                    {e._t==="temp" && <>{e.c.toFixed(1)} °C</>}
-                    {e._t==="tummy" && <>Tummy time · {e.min} min</>}
-                  </div>
-                  <span style={{fontSize:11, fontWeight:500, color:T.inkSoft}}>{isToday(e.time) ? fmtTime(e.time) : fmtDate(e.time)}</span>
-                  <button onClick={()=>removeEntry(listKeyFor[e._t], e.id)} aria-label="Delete entry"
-                    style={{border:"none", background:"transparent", color:T.faint, cursor:"pointer", padding:2, display:"flex"}}>
-                    <IClose size={13}/>
-                  </button>
-                </div>
-              ))}
-            </Card>
-          )}
-        </>}
-
-        {tab==="growth" && <>
-          <Card title="New Check-in" icon={<IRuler/>} accent={T.growth} T={T}>
-            <SliderRow label="Weight" valueLabel={`${gWeight.toFixed(2)} kg`} T={T}>
-              <Slider value={gWeight} min={2} max={16} step={0.05} onChange={setGWeight} color={T.growth} T={T} />
-            </SliderRow>
-            <SliderRow label="Height" valueLabel={`${gHeight} cm`} T={T}>
-              <Slider value={gHeight} min={40} max={100} step={0.5} onChange={setGHeight} color={T.growth} T={T} />
-            </SliderRow>
-            <SliderRow label="Head Circumference" valueLabel={`${gHead} cm`} T={T}>
-              <Slider value={gHead} min={30} max={55} step={0.5} onChange={setGHead} color={T.growth} T={T} />
-            </SliderRow>
-            <Btn T={T} onClick={logGrowth}>Save Check-in</Btn>
-          </Card>
-
-          <Card title="Weight Curve" icon={<IScale/>} accent={T.sleep} T={T}>
-            <PercentileChart entries={data.growth} birthDate={data.birthDate} metric="weightKg" table={WHO_WEIGHT} color={T.sleep} unit="kg" T={T} />
-            <p style={{fontSize:10.5, marginTop:10, color:T.faint, lineHeight:1.6}}>
-              Shaded bands show approximate WHO ranges for boys — a visual guide only; your pediatrician's charts are the official reference.
-            </p>
-          </Card>
-
-          <Card title="Height Curve" icon={<ISprout/>} accent={T.diaper} T={T}>
-            <PercentileChart entries={data.growth} birthDate={data.birthDate} metric="heightCm" table={WHO_HEIGHT} color={T.diaper} unit="cm" T={T} />
-          </Card>
-
-          {data.growth.length>0 && (
-            <Card title="Check-in History" icon={<INotebook/>} accent={T.med} T={T}>
-              {[...data.growth].reverse().map(g => (
-                <div key={g.id} style={{display:"flex", alignItems:"center", justifyContent:"space-between", padding:"10px 0", borderBottom:`1px solid ${T.hairline}`}}>
-                  <span style={{fontSize:13, fontWeight:500, color:T.inkSoft}}>{fmtDate(g.date)}</span>
-                  <div style={{display:"flex", alignItems:"center", gap:10}}>
-                    <span style={{fontFamily:T.display, fontSize:16, fontWeight:600, color:T.ink}}>
-                      {g.weightKg.toFixed(2)} kg · {g.heightCm} cm · {g.headCm} cm
-                    </span>
-                    <button onClick={()=>removeEntry("growth", g.id)} aria-label="Delete check-in"
-                      style={{border:"none", background:"transparent", color:T.faint, cursor:"pointer", padding:2, display:"flex"}}>
-                      <IClose size={13}/>
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </Card>
-          )}
-        </>}
-
-        {tab==="milestones" && (
-          <Card title="First Adventures" icon={<IStar/>} accent={T.gold} T={T}
-            sub="Tap a milestone the day it happens — the date is recorded automatically.">
-            {MILESTONE_LIST.map(m => {
-              const done = data.milestones[m.key];
-              return (
-                <button key={m.key} onClick={()=>toggleMilestone(m.key)}
-                  style={{ width:"100%", display:"flex", alignItems:"center", justifyContent:"space-between",
-                    padding:"14px 2px", textAlign:"left", cursor:"pointer", background:"transparent",
-                    border:"none", borderBottom:`1px solid ${T.hairline}` }}>
-                  <span style={{display:"flex", alignItems:"center", gap:12}}>
-                    <span style={{color: done ? T.gold : T.faint, display:"flex"}}>
-                      {done ? <IStarFill size={17}/> : <IStar size={17}/>}
-                    </span>
-                    <span style={{fontFamily:T.display, fontSize:17, fontWeight: done ? 600 : 500, color: done ? T.ink : T.inkSoft}}>{m.label}</span>
-                  </span>
-                  <span style={{fontSize:10.5, fontWeight:600, letterSpacing:"0.12em", textTransform:"uppercase", color: done ? T.gold : T.faint}}>
-                    {done ? fmtDate(done) : "—"}
-                  </span>
-                </button>
-              );
-            })}
-          </Card>
-        )}
-
-        {tab==="trends" && <>
-          <Card title="Milk · 7 Days" icon={<IBottle/>} accent={T.feed} T={T}><WeekBars data={week} field="ml" color={T.feed} T={T} /></Card>
-          <Card title="Pumped · 7 Days" icon={<IDrop/>} accent={T.pump} T={T}><WeekBars data={week} field="pumped" color={T.pump} T={T} /></Card>
-          <Card title="Sleep · 7 Days" icon={<IMoon/>} accent={T.sleep} T={T}><WeekBars data={week} field="sleep" color={T.sleep} T={T} fmt={hrsMin} /></Card>
-          <Card title="Tummy Time · 7 Days" icon={<ISun/>} accent={T.health} T={T}><WeekBars data={week} field="tummy" color={T.health} T={T} fmt={m=>`${m}m`} /></Card>
-        </>}
-
-        {tab==="settings" && <>
-          <Card title="Family Sync" icon={<ISatellite/>} accent={T.growth} T={T}
-            sub={!FB_READY
-              ? "Firebase isn't configured yet. Open index.html and paste your Firebase config at the top (marked Step 1). Until then, data stays on this device."
-              : "Enter the same family code on every phone to share one set of data. Treat it like a password — long and hard to guess."}>
-            {FB_READY && <>
-              <div style={{marginBottom:14}}>
-                <TextInput value={codeInput} onChange={e=>setCodeInput(e.target.value)} placeholder="Family code (8+ characters)" T={T} />
-              </div>
-              <Btn variant="gold" T={T} onClick={connectFamily}>{familyCode ? "Update Code" : "Connect"}</Btn>
-            </>}
-          </Card>
-
-          <Card title="Baby Details" icon={<IRocket/>} accent={T.sleep} T={T}>
-            <Label T={T}>Name</Label>
-            <div style={{marginBottom:18}}>
-              <TextInput value={data.babyName} placeholder="Little Astronaut" T={T}
-                onChange={e=>setData({...data, babyName:e.target.value})} onBlur={()=>save(data)} />
-            </div>
-            <Label T={T}>Birth Date</Label>
-            <TextInput type="date" value={data.birthDate} T={T} onChange={e=>save({...data, birthDate:e.target.value})} />
-          </Card>
-
-          <Card title="Appearance" icon={<IOrbit/>} accent={T.gold} T={T}>
-            <div style={{display:"grid", gridTemplateColumns:"1fr 1fr", gap:12}}>
-              {Object.entries(THEMES).map(([key, th]) => (
-                <button key={key} onClick={()=>save({...data, theme:key})}
-                  style={{ padding:"18px 16px", textAlign:"left", cursor:"pointer", background:th.bg, borderRadius:12,
-                    border: data.theme===key ? `1.5px solid ${T.gold}` : `1px solid ${T.border}` }}>
-                  <div style={{display:"flex", gap:6, marginBottom:10}}>
-                    {[th.gold, th.sleep, th.feed, th.diaper].map((c,i) => (
-                      <div key={i} style={{width:14, height:14, borderRadius:"50%", background:c, border:`1px solid ${th.border}`}} />
-                    ))}
-                  </div>
-                  <div style={{fontFamily:th.display, fontSize:18, fontWeight:600, color:th.ink}}>{th.name}</div>
-                  <div style={{fontSize:10, fontWeight:500, letterSpacing:"0.06em", color:th.inkSoft, marginTop:2}}>{th.tagline}</div>
-                </button>
-              ))}
-            </div>
-          </Card>
-        </>}
-      </main>
-
-      {toast && (
-        <div style={{ position:"fixed", left:"50%", transform:"translateX(-50%)", bottom:100, padding:"11px 26px",
-          borderRadius:99, fontSize:11, fontWeight:600, letterSpacing:"0.14em", textTransform:"uppercase",
-          boxShadow:"0 6px 20px rgba(0,0,0,0.22)", zIndex:50, background:T.ink, color:T.bg }}>
-          {toast}
-        </div>
-      )}
-
-      <nav style={{ position:"fixed", bottom:0, left:0, right:0, zIndex:40, background:T.navBg,
-        backdropFilter:"blur(12px)", WebkitBackdropFilter:"blur(12px)", borderTop:`1px solid ${T.border}`,
-        paddingBottom:"env(safe-area-inset-bottom)" }}>
-        <div style={{maxWidth:460, margin:"0 auto", display:"flex", justifyContent:"space-around", padding:"10px 8px 8px"}}>
-          {[
-            {id:"today", icon:<IRocket size={21}/>, label:"Today"},
-            {id:"growth", icon:<IRuler size={21}/>, label:"Growth"},
-            {id:"milestones", icon:<IStar size={21}/>, label:"Firsts"},
-            {id:"trends", icon:<IChart size={21}/>, label:"Trends"},
-            {id:"settings", icon:<IGear size={21}/>, label:"Setup"},
-          ].map(t => {
-            const active = tab===t.id;
-            return (
-              <button key={t.id} onClick={()=>setTab(t.id)}
-                style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:3, padding:"4px 14px",
-                  border:"none", cursor:"pointer", background:"transparent",
-                  color: active ? T.gold : T.inkSoft, borderTop: active ? `2px solid ${T.gold}` : "2px solid transparent", marginTop:-12, paddingTop:12 }}>
-                {t.icon}
-                <span style={{fontSize:8.5, fontWeight:600, letterSpacing:"0.16em", textTransform:"uppercase"}}>{t.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </nav>
-    </div>
-  );
+  const shell = { maxWidth: 460, margin: "0 auto", padding: "0 20px" };
+  return /* @__PURE__ */ React.createElement("div", { style: { minHeight: "100vh", paddingBottom: 116, background: T.bg, color: T.ink, fontFamily: T.body } }, /* @__PURE__ */ React.createElement("header", { style: { ...shell, paddingTop: "max(20px, env(safe-area-inset-top))" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", justifyContent: "space-between", paddingBottom: 14, borderBottom: `1px solid ${T.hairline}` } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10 } }, /* @__PURE__ */ React.createElement(LogoMark, { T }), /* @__PURE__ */ React.createElement("span", { style: { fontFamily: T.display, fontSize: 17, fontWeight: 600, letterSpacing: "0.04em" } }, "Little Astronaut")), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 6 } }, /* @__PURE__ */ React.createElement("span", { style: { width: 6, height: 6, borderRadius: "50%", background: syncBadge.dot } }), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 9, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase", color: T.inkSoft } }, syncBadge.txt))), /* @__PURE__ */ React.createElement("div", { style: { padding: "18px 0 6px", textAlign: "center" } }, /* @__PURE__ */ React.createElement(HeroCelestial, { T }), /* @__PURE__ */ React.createElement("h1", { style: { fontFamily: T.display, fontSize: 38, fontWeight: 600, letterSpacing: "0.01em", marginTop: 6, color: T.ink } }, name), age && /* @__PURE__ */ React.createElement("p", { style: { fontFamily: T.display, fontStyle: "italic", fontSize: 16, color: T.gold, marginTop: 2 } }, age), /* @__PURE__ */ React.createElement("div", { style: { marginTop: 12 } }, /* @__PURE__ */ React.createElement(Ornament, { T }))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", padding: "16px 4px 4px" } }, [
+    { v: today.ml, u: "mL", l: "Milk" },
+    { v: today.pumped, u: "mL", l: "Pumped" },
+    { v: hrsMin(today.sleepMin), u: "", l: "Sleep" },
+    { v: today.diapers, u: "", l: "Diapers" },
+    { v: today.meds, u: "", l: "Meds" }
+  ].map((s, i) => /* @__PURE__ */ React.createElement("div", { key: s.l, style: { flex: 1, textAlign: "center", borderLeft: i > 0 ? `1px solid ${T.hairline}` : "none" } }, /* @__PURE__ */ React.createElement("div", { style: { fontFamily: T.display, fontSize: 22, fontWeight: 600, color: T.ink, lineHeight: 1.1 } }, s.v, s.u && /* @__PURE__ */ React.createElement("span", { style: { fontSize: 11, color: T.inkSoft, marginLeft: 1 } }, s.u)), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 8.5, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", color: T.inkSoft, marginTop: 3 } }, s.l))))), /* @__PURE__ */ React.createElement("main", { style: { ...shell, position: "relative", paddingTop: 22 } }, tab === "today" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Card, { title: "Milk Feed", icon: /* @__PURE__ */ React.createElement(IBottle, null), accent: T.feed, T }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 8, marginBottom: 18 } }, /* @__PURE__ */ React.createElement(Chip, { active: feedType === "bottle", color: T.feed, T, onClick: () => setFeedType("bottle") }, "Bottle"), /* @__PURE__ */ React.createElement(Chip, { active: feedType === "breast", color: T.feed, T, onClick: () => setFeedType("breast") }, "Breast")), /* @__PURE__ */ React.createElement(SliderRow, { label: "Amount", valueLabel: `${feedMl} mL`, T }, /* @__PURE__ */ React.createElement(Slider, { value: feedMl, min: 10, max: 300, step: 5, onChange: setFeedMl, color: T.feed, T })), /* @__PURE__ */ React.createElement(SliderRow, { label: "When", valueLabel: feedAgo === 0 ? "Just now" : `${fmtTime(minutesAgoToISO(feedAgo))} \xB7 ${feedAgo}m ago`, T }, /* @__PURE__ */ React.createElement(Slider, { value: feedAgo, min: 0, max: 240, step: 5, onChange: setFeedAgo, color: T.feed, T })), /* @__PURE__ */ React.createElement(Btn, { T, onClick: logFeed }, "Log Feed")), /* @__PURE__ */ React.createElement(Card, { title: "Pumping", icon: /* @__PURE__ */ React.createElement(IDrop, null), accent: T.pump, T }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 8, marginBottom: 18 } }, ["left", "right", "both"].map((s) => /* @__PURE__ */ React.createElement(Chip, { key: s, active: pumpSide === s, color: T.pump, T, onClick: () => setPumpSide(s) }, s))), /* @__PURE__ */ React.createElement(SliderRow, { label: "Amount", valueLabel: `${pumpMl} mL`, T }, /* @__PURE__ */ React.createElement(Slider, { value: pumpMl, min: 5, max: 300, step: 5, onChange: setPumpMl, color: T.pump, T })), /* @__PURE__ */ React.createElement(SliderRow, { label: "When", valueLabel: pumpAgo === 0 ? "Just now" : `${pumpAgo}m ago`, T }, /* @__PURE__ */ React.createElement(Slider, { value: pumpAgo, min: 0, max: 240, step: 5, onChange: setPumpAgo, color: T.pump, T })), /* @__PURE__ */ React.createElement(Btn, { T, onClick: logPump }, "Log Session")), /* @__PURE__ */ React.createElement(Card, { title: "Sleep & Naps", icon: /* @__PURE__ */ React.createElement(IMoon, null), accent: T.sleep, T }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 8, marginBottom: 18 } }, /* @__PURE__ */ React.createElement(Chip, { active: sleepKind === "nap", color: T.sleep, T, onClick: () => setSleepKind("nap") }, "Nap"), /* @__PURE__ */ React.createElement(Chip, { active: sleepKind === "night", color: T.sleep, T, onClick: () => setSleepKind("night") }, "Night")), /* @__PURE__ */ React.createElement(SliderRow, { label: "Duration", valueLabel: hrsMin(sleepDur), T }, /* @__PURE__ */ React.createElement(Slider, { value: sleepDur, min: 10, max: 720, step: 5, onChange: setSleepDur, color: T.sleep, T })), /* @__PURE__ */ React.createElement(SliderRow, { label: "Woke", valueLabel: sleepAgo === 0 ? "Just now" : `${sleepAgo}m ago`, T }, /* @__PURE__ */ React.createElement(Slider, { value: sleepAgo, min: 0, max: 240, step: 5, onChange: setSleepAgo, color: T.sleep, T })), /* @__PURE__ */ React.createElement(Btn, { T, onClick: logSleep }, "Log Sleep")), /* @__PURE__ */ React.createElement(Card, { title: "Diaper", icon: /* @__PURE__ */ React.createElement(IDiaper, null), accent: T.diaper, T }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 12 } }, /* @__PURE__ */ React.createElement(Btn, { half: true, variant: "outline", accent: T.diaper, T, onClick: () => logDiaper("wet") }, "Wet"), /* @__PURE__ */ React.createElement(Btn, { half: true, variant: "outline", accent: T.diaper, T, onClick: () => logDiaper("dirty") }, "Soiled"))), /* @__PURE__ */ React.createElement(Card, { title: "Medication", icon: /* @__PURE__ */ React.createElement(IPill, null), accent: T.med, T }, /* @__PURE__ */ React.createElement("div", { style: { marginBottom: 18 } }, /* @__PURE__ */ React.createElement(TextInput, { value: medName, onChange: (e) => setMedName(e.target.value), placeholder: "Medication name", T })), /* @__PURE__ */ React.createElement(SliderRow, { label: "Dose", valueLabel: `${medDose} mL`, T }, /* @__PURE__ */ React.createElement(Slider, { value: medDose, min: 0.25, max: 10, step: 0.25, onChange: setMedDose, color: T.med, T })), /* @__PURE__ */ React.createElement(SliderRow, { label: "When", valueLabel: medAgo === 0 ? "Just now" : `${medAgo}m ago`, T }, /* @__PURE__ */ React.createElement(Slider, { value: medAgo, min: 0, max: 240, step: 5, onChange: setMedAgo, color: T.med, T })), /* @__PURE__ */ React.createElement(Btn, { T, onClick: logMed }, "Log Medication")), /* @__PURE__ */ React.createElement(Card, { title: "Health & Play", icon: /* @__PURE__ */ React.createElement(IThermo, null), accent: T.health, T }, /* @__PURE__ */ React.createElement(SliderRow, { label: "Temperature", valueLabel: `${tempC.toFixed(1)} \xB0C`, T }, /* @__PURE__ */ React.createElement(Slider, { value: tempC, min: 35, max: 41, step: 0.1, onChange: setTempC, color: T.health, T })), /* @__PURE__ */ React.createElement("div", { style: { marginBottom: 18 } }, /* @__PURE__ */ React.createElement(Btn, { variant: "outline", accent: T.health, T, onClick: logTemp }, "Log Temperature")), /* @__PURE__ */ React.createElement(SliderRow, { label: "Tummy Time", valueLabel: `${tummyMin} min`, T }, /* @__PURE__ */ React.createElement(Slider, { value: tummyMin, min: 1, max: 60, step: 1, onChange: setTummyMin, color: T.health, T })), /* @__PURE__ */ React.createElement(Btn, { variant: "outline", accent: T.health, T, onClick: logTummy }, "Log Tummy Time")), recentLog.length > 0 && /* @__PURE__ */ React.createElement(Card, { title: "Recent Activity", icon: /* @__PURE__ */ React.createElement(ISatellite, null), accent: T.gold, T }, recentLog.map((e) => /* @__PURE__ */ React.createElement("div", { key: e.id, style: { display: "flex", alignItems: "center", gap: 10, padding: "10px 0", borderBottom: `1px solid ${T.hairline}` } }, /* @__PURE__ */ React.createElement("span", { style: { color: logColor[e._t], display: "flex" } }, logIcon[e._t]), /* @__PURE__ */ React.createElement("div", { style: { flex: 1, fontSize: 13.5, fontWeight: 500, color: T.ink } }, e._t === "feed" && /* @__PURE__ */ React.createElement(React.Fragment, null, e.ml, " mL \xB7 ", e.type), e._t === "pump" && /* @__PURE__ */ React.createElement(React.Fragment, null, "Pumped ", e.ml, " mL \xB7 ", e.side), e._t === "sleep" && /* @__PURE__ */ React.createElement(React.Fragment, null, hrsMin(e.durationMin), " ", e.kind), e._t === "med" && /* @__PURE__ */ React.createElement(React.Fragment, null, e.name, " \xB7 ", e.doseMl, " mL"), e._t === "diaper" && /* @__PURE__ */ React.createElement(React.Fragment, null, e.kind === "wet" ? "Wet" : "Soiled", " diaper"), e._t === "temp" && /* @__PURE__ */ React.createElement(React.Fragment, null, e.c.toFixed(1), " \xB0C"), e._t === "tummy" && /* @__PURE__ */ React.createElement(React.Fragment, null, "Tummy time \xB7 ", e.min, " min")), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 11, fontWeight: 500, color: T.inkSoft } }, isToday(e.time) ? fmtTime(e.time) : fmtDate(e.time)), /* @__PURE__ */ React.createElement(
+    "button",
+    {
+      onClick: () => removeEntry(listKeyFor[e._t], e.id),
+      "aria-label": "Delete entry",
+      style: { border: "none", background: "transparent", color: T.faint, cursor: "pointer", padding: 2, display: "flex" }
+    },
+    /* @__PURE__ */ React.createElement(IClose, { size: 13 })
+  ))))), tab === "growth" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Card, { title: "New Check-in", icon: /* @__PURE__ */ React.createElement(IRuler, null), accent: T.growth, T }, /* @__PURE__ */ React.createElement(SliderRow, { label: "Weight", valueLabel: `${gWeight.toFixed(2)} kg`, T }, /* @__PURE__ */ React.createElement(Slider, { value: gWeight, min: 2, max: 16, step: 0.05, onChange: setGWeight, color: T.growth, T })), /* @__PURE__ */ React.createElement(SliderRow, { label: "Height", valueLabel: `${gHeight} cm`, T }, /* @__PURE__ */ React.createElement(Slider, { value: gHeight, min: 40, max: 100, step: 0.5, onChange: setGHeight, color: T.growth, T })), /* @__PURE__ */ React.createElement(SliderRow, { label: "Head Circumference", valueLabel: `${gHead} cm`, T }, /* @__PURE__ */ React.createElement(Slider, { value: gHead, min: 30, max: 55, step: 0.5, onChange: setGHead, color: T.growth, T })), /* @__PURE__ */ React.createElement(Btn, { T, onClick: logGrowth }, "Save Check-in")), /* @__PURE__ */ React.createElement(Card, { title: "Weight Curve", icon: /* @__PURE__ */ React.createElement(IScale, null), accent: T.sleep, T }, /* @__PURE__ */ React.createElement(PercentileChart, { entries: data.growth, birthDate: data.birthDate, metric: "weightKg", table: WHO_WEIGHT, color: T.sleep, unit: "kg", T }), /* @__PURE__ */ React.createElement("p", { style: { fontSize: 10.5, marginTop: 10, color: T.faint, lineHeight: 1.6 } }, "Shaded bands show approximate WHO ranges for boys \u2014 a visual guide only; your pediatrician's charts are the official reference.")), /* @__PURE__ */ React.createElement(Card, { title: "Height Curve", icon: /* @__PURE__ */ React.createElement(ISprout, null), accent: T.diaper, T }, /* @__PURE__ */ React.createElement(PercentileChart, { entries: data.growth, birthDate: data.birthDate, metric: "heightCm", table: WHO_HEIGHT, color: T.diaper, unit: "cm", T })), data.growth.length > 0 && /* @__PURE__ */ React.createElement(Card, { title: "Check-in History", icon: /* @__PURE__ */ React.createElement(INotebook, null), accent: T.med, T }, [...data.growth].reverse().map((g) => /* @__PURE__ */ React.createElement("div", { key: g.id, style: { display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 0", borderBottom: `1px solid ${T.hairline}` } }, /* @__PURE__ */ React.createElement("span", { style: { fontSize: 13, fontWeight: 500, color: T.inkSoft } }, fmtDate(g.date)), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 10 } }, /* @__PURE__ */ React.createElement("span", { style: { fontFamily: T.display, fontSize: 16, fontWeight: 600, color: T.ink } }, g.weightKg.toFixed(2), " kg \xB7 ", g.heightCm, " cm \xB7 ", g.headCm, " cm"), /* @__PURE__ */ React.createElement(
+    "button",
+    {
+      onClick: () => removeEntry("growth", g.id),
+      "aria-label": "Delete check-in",
+      style: { border: "none", background: "transparent", color: T.faint, cursor: "pointer", padding: 2, display: "flex" }
+    },
+    /* @__PURE__ */ React.createElement(IClose, { size: 13 })
+  )))))), tab === "milestones" && /* @__PURE__ */ React.createElement(
+    Card,
+    {
+      title: "First Adventures",
+      icon: /* @__PURE__ */ React.createElement(IStar, null),
+      accent: T.gold,
+      T,
+      sub: "Tap a milestone the day it happens \u2014 the date is recorded automatically."
+    },
+    MILESTONE_LIST.map((m) => {
+      const done = data.milestones[m.key];
+      return /* @__PURE__ */ React.createElement(
+        "button",
+        {
+          key: m.key,
+          onClick: () => toggleMilestone(m.key),
+          style: {
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "14px 2px",
+            textAlign: "left",
+            cursor: "pointer",
+            background: "transparent",
+            border: "none",
+            borderBottom: `1px solid ${T.hairline}`
+          }
+        },
+        /* @__PURE__ */ React.createElement("span", { style: { display: "flex", alignItems: "center", gap: 12 } }, /* @__PURE__ */ React.createElement("span", { style: { color: done ? T.gold : T.faint, display: "flex" } }, done ? /* @__PURE__ */ React.createElement(IStarFill, { size: 17 }) : /* @__PURE__ */ React.createElement(IStar, { size: 17 })), /* @__PURE__ */ React.createElement("span", { style: { fontFamily: T.display, fontSize: 17, fontWeight: done ? 600 : 500, color: done ? T.ink : T.inkSoft } }, m.label)),
+        /* @__PURE__ */ React.createElement("span", { style: { fontSize: 10.5, fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: done ? T.gold : T.faint } }, done ? fmtDate(done) : "\u2014")
+      );
+    })
+  ), tab === "trends" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Card, { title: "Milk \xB7 7 Days", icon: /* @__PURE__ */ React.createElement(IBottle, null), accent: T.feed, T }, /* @__PURE__ */ React.createElement(WeekBars, { data: week, field: "ml", color: T.feed, T })), /* @__PURE__ */ React.createElement(Card, { title: "Pumped \xB7 7 Days", icon: /* @__PURE__ */ React.createElement(IDrop, null), accent: T.pump, T }, /* @__PURE__ */ React.createElement(WeekBars, { data: week, field: "pumped", color: T.pump, T })), /* @__PURE__ */ React.createElement(Card, { title: "Sleep \xB7 7 Days", icon: /* @__PURE__ */ React.createElement(IMoon, null), accent: T.sleep, T }, /* @__PURE__ */ React.createElement(WeekBars, { data: week, field: "sleep", color: T.sleep, T, fmt: hrsMin })), /* @__PURE__ */ React.createElement(Card, { title: "Tummy Time \xB7 7 Days", icon: /* @__PURE__ */ React.createElement(ISun, null), accent: T.health, T }, /* @__PURE__ */ React.createElement(WeekBars, { data: week, field: "tummy", color: T.health, T, fmt: (m) => `${m}m` }))), tab === "settings" && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(
+    Card,
+    {
+      title: "Family Sync",
+      icon: /* @__PURE__ */ React.createElement(ISatellite, null),
+      accent: T.growth,
+      T,
+      sub: !FB_READY ? "Firebase isn't configured yet. Open index.html and paste your Firebase config at the top (marked Step 1). Until then, data stays on this device." : "Enter the same family code on every phone to share one set of data. Treat it like a password \u2014 long and hard to guess."
+    },
+    FB_READY && /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement("div", { style: { marginBottom: 14 } }, /* @__PURE__ */ React.createElement(TextInput, { value: codeInput, onChange: (e) => setCodeInput(e.target.value), placeholder: "Family code (8+ characters)", T })), /* @__PURE__ */ React.createElement(Btn, { variant: "gold", T, onClick: connectFamily }, familyCode ? "Update Code" : "Connect"))
+  ), /* @__PURE__ */ React.createElement(Card, { title: "Baby Details", icon: /* @__PURE__ */ React.createElement(IRocket, null), accent: T.sleep, T }, /* @__PURE__ */ React.createElement(Label, { T }, "Name"), /* @__PURE__ */ React.createElement("div", { style: { marginBottom: 18 } }, /* @__PURE__ */ React.createElement(
+    TextInput,
+    {
+      value: data.babyName,
+      placeholder: "Little Astronaut",
+      T,
+      onChange: (e) => setData({ ...data, babyName: e.target.value }),
+      onBlur: () => save(data)
+    }
+  )), /* @__PURE__ */ React.createElement(Label, { T }, "Birth Date"), /* @__PURE__ */ React.createElement(TextInput, { type: "date", value: data.birthDate, T, onChange: (e) => save({ ...data, birthDate: e.target.value }) })), /* @__PURE__ */ React.createElement(Card, { title: "Appearance", icon: /* @__PURE__ */ React.createElement(IOrbit, null), accent: T.gold, T }, /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 } }, Object.entries(THEMES).map(([key, th]) => /* @__PURE__ */ React.createElement(
+    "button",
+    {
+      key,
+      onClick: () => save({ ...data, theme: key }),
+      style: {
+        padding: "18px 16px",
+        textAlign: "left",
+        cursor: "pointer",
+        background: th.bg,
+        borderRadius: 12,
+        border: data.theme === key ? `1.5px solid ${T.gold}` : `1px solid ${T.border}`
+      }
+    },
+    /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 6, marginBottom: 10 } }, [th.gold, th.sleep, th.feed, th.diaper].map((c, i) => /* @__PURE__ */ React.createElement("div", { key: i, style: { width: 14, height: 14, borderRadius: "50%", background: c, border: `1px solid ${th.border}` } }))),
+    /* @__PURE__ */ React.createElement("div", { style: { fontFamily: th.display, fontSize: 18, fontWeight: 600, color: th.ink } }, th.name),
+    /* @__PURE__ */ React.createElement("div", { style: { fontSize: 10, fontWeight: 500, letterSpacing: "0.06em", color: th.inkSoft, marginTop: 2 } }, th.tagline)
+  )))))), toast && /* @__PURE__ */ React.createElement("div", { style: {
+    position: "fixed",
+    left: "50%",
+    transform: "translateX(-50%)",
+    bottom: 100,
+    padding: "11px 26px",
+    borderRadius: 99,
+    fontSize: 11,
+    fontWeight: 600,
+    letterSpacing: "0.14em",
+    textTransform: "uppercase",
+    boxShadow: "0 6px 20px rgba(0,0,0,0.22)",
+    zIndex: 50,
+    background: T.ink,
+    color: T.bg
+  } }, toast), /* @__PURE__ */ React.createElement("nav", { style: {
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 40,
+    background: T.navBg,
+    backdropFilter: "blur(12px)",
+    WebkitBackdropFilter: "blur(12px)",
+    borderTop: `1px solid ${T.border}`,
+    paddingBottom: "env(safe-area-inset-bottom)"
+  } }, /* @__PURE__ */ React.createElement("div", { style: { maxWidth: 460, margin: "0 auto", display: "flex", justifyContent: "space-around", padding: "10px 8px 8px" } }, [
+    { id: "today", icon: /* @__PURE__ */ React.createElement(IRocket, { size: 21 }), label: "Today" },
+    { id: "growth", icon: /* @__PURE__ */ React.createElement(IRuler, { size: 21 }), label: "Growth" },
+    { id: "milestones", icon: /* @__PURE__ */ React.createElement(IStar, { size: 21 }), label: "Firsts" },
+    { id: "trends", icon: /* @__PURE__ */ React.createElement(IChart, { size: 21 }), label: "Trends" },
+    { id: "settings", icon: /* @__PURE__ */ React.createElement(IGear, { size: 21 }), label: "Setup" }
+  ].map((t) => {
+    const active = tab === t.id;
+    return /* @__PURE__ */ React.createElement(
+      "button",
+      {
+        key: t.id,
+        onClick: () => setTab(t.id),
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 3,
+          padding: "4px 14px",
+          border: "none",
+          cursor: "pointer",
+          background: "transparent",
+          color: active ? T.gold : T.inkSoft,
+          borderTop: active ? `2px solid ${T.gold}` : "2px solid transparent",
+          marginTop: -12,
+          paddingTop: 12
+        }
+      },
+      t.icon,
+      /* @__PURE__ */ React.createElement("span", { style: { fontSize: 8.5, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase" } }, t.label)
+    );
+  }))));
 }
+ReactDOM.createRoot(document.getElementById("root")).render(/* @__PURE__ */ React.createElement(LittleAstronaut, null));
 
-ReactDOM.createRoot(document.getElementById("root")).render(<LittleAstronaut />);
 </script>
 </body>
 </html>
